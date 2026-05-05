@@ -6,11 +6,15 @@ const userSchema=new Schema({
     },
     email:{
         type:String,
+        unique:true,
         required:[true,"Email required"]
     },
     password:{
         type:String,
         required:[true,"Password required"]
+    },
+    refreshToken:{
+        type:String
     }
     },{
      timestamps:true,

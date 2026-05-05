@@ -1,4 +1,4 @@
-//register 
+//REGISTER 
 POST http://localhost:5000/user-api/user
 Content-Type: application/json
 
@@ -8,12 +8,38 @@ Content-Type: application/json
     "password":"123456"
 }
 
-//login
-###
+###LOGIN
 POST http://localhost:5000/user-api/login
 Content-Type: application/json
 
 {
     "email":"user@gmail.com",
-    "password":"123456"
+    "password":"567890"
+}
+
+###LOGOUT
+GET http://localhost:5000/user-api/logout
+
+###CHECK-AUTHH
+GET http://localhost:5000/user-api/check-auth
+
+### PROFILE
+GET http://localhost:5000/user-api/profile
+
+###UPDATE PASSWORD
+PUT http://localhost:5000/user-api/password
+Content-Type: application/json
+
+{
+   "email":"user@gmail.com",
+    "password":"123456",
+    "newpassword":"567890"
+}
+
+###REFRESH-TOKEN
+POST http://localhost:5000/user-api/refresh
+Content-Type: application/json
+
+{
+    "refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Zjg2NTIxMTNiZTJhMDFmNmQzZjBhNSIsImVtYWlsIjoidXNlckBnbWFpbC5jb20iLCJpYXQiOjE3Nzc5OTQ3ODAsImV4cCI6MTc3ODU5OTU4MH0.cfi-pgXmws_e6NnpNiKYwd25rFgy9gdn6C21bKUDsk4"
 }

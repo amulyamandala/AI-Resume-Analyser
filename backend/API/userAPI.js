@@ -39,6 +39,10 @@ userApp.post("/login",async(req,res)=>{
     if(!isPasswordValid)
         return res.status(401).json({message:"Invalid password"})
     const token=sign({id:user._id,email:user.email},process.env.JWT_SECRET,{expiresIn:"1h"})
+    //refresh token
+    const refreshToken=sign({id:user._id,email:user.email},process.env.JWT_REFRESH,{expiresIn:"7d"})
+    user.refreshToken=refreshToken
+    await user.save()
     res.cookie("token",token,{
         httpOnly:true,
         sameSite:"lax",
@@ -47,4 +51,78 @@ userApp.post("/login",async(req,res)=>{
     let userObj=user.toObject()
     delete userObj.password
     res.status(200).json({message:"Login successful",token,payload:userObj})
+})
+//logout 
+userApp.get("/logout",(req,res)=>{
+    res.clearCookie("token",{
+        httpOnly:true,
+        secure:false,
+        sameSite:"lax",
+    })
+    res.status(200).json({messsage:"Logout Succesful"})
+})
+//check-auth 
+userApp.get("/check-auth",async(req,res)=>{
+    try{
+        const token=req.cookies.token
+        if(!token){
+           return res.status(401).json({message:"No token found"})
+        }
+        const decoded=verify(token,process.env.JWT_SECRET)
+        const user=await UserModel.findById(decoded.id)
+        if(!user)
+            return res.status(401).json({message:"User not found"})
+        let  userObj=user.toObject()
+        delete userObj.password
+        res.status(200).json({message:"User  authenticated",payload:userObj})
+    }
+    catch(err){
+        console.log(err)
+        res.status(401).json({message:"Authentication failed"})
+    }
+})
+//get profile 
+userApp.get("/profile",async(req,res)=>{
+    let idtoken=req.user?.id
+    let userdetails=await UserModel.find({user:idtoken})
+    res.status(200).json({message:"User Details",payload:userdetails})
+})
+//update password
+userApp.put("/password",async(req,res)=>{
+    const{email,password,newpassword}=req.body
+    const user=await UserModel.findOne({email})
+    console.log("password:", password);
+    console.log("newpassword:", newpassword);
+    console.log("user.password:", user?.password);
+    if(!user)
+        return res.status(404).json({message:"Email not found"})
+    const isPassValid=await compare(password,user.password)
+    if(!isPassValid)
+        return res.status(401).json({message:"Password Invalid"})
+    const isSame=await compare(newpassword,user.password)
+    if(isSame){
+        return res.status(400).json({message:"The password is same as old"})
+    }
+    const hashed=await hash(newpassword,12)
+    const modified=await UserModel.findOneAndUpdate({email:email},{$set:{password:hashed}},{new:true,runValidators:true})
+    res.status(200).json({message:"Password updated"})
+})
+//refresh-token
+userApp.post("/refresh",async(req,res)=>{
+    const refreshToken=req.cookies.refreshToken || req.body.refreshToken
+    if(!refreshToken)
+        return res.status(401).json({message:"Token not found"})
+    const decoded=verify(refreshToken,process.env.JWT_REFRESH)
+    const user=await UserModel.findById(decoded.id)
+     if(!user)
+            return res.status(401).json({message:"Invalid refresh token"})
+    if (user.refreshToken !== refreshToken) 
+        return res.status(403).json({ message: "Invalid refresh token" });
+    const newAccesstoken=sign({id:user._id,email:user.email},process.env.JWT_SECRET,{expiresIn:"2d"})
+    res.cookie("token",newAccesstoken,{
+        httpOnly:true,
+        secure:false,
+        sameSite:"lax"
+    })
+    res.status(200).json({message:"Token Refreshed",token:newAccesstoken})
 })

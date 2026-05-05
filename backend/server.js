@@ -2,9 +2,11 @@ import exp from 'express'
 import { connect } from 'mongoose'
 import { config } from 'dotenv'
 import { userApp } from './API/userAPI.js'
+import cookieParser from "cookie-parser"
 config()
  const app=exp()
  app.use(exp.json())
+ app.use(cookieParser())
  app.use("/user-api",userApp)
  const port=process.env.PORT||5000
  const connectionDb=async()=>{
