@@ -1,5 +1,10 @@
 import { Schema,model,Types } from "mongoose";
 const analysisSchema=new Schema({
+    userId:{
+        type:Types.ObjectId,
+        ref:"user",
+        required:true
+    },
     resumeId:{
         type:Types.ObjectId,
         ref:"resume",
@@ -13,7 +18,7 @@ const analysisSchema=new Schema({
     suggestions:[String],
     section:{
         education:Boolean,
-        Skills:Boolean,
+        skills:Boolean,
         experience:Boolean,
         certifications:Boolean,
         projects:Boolean

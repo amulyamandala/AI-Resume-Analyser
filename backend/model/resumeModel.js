@@ -15,7 +15,7 @@ const resumeSchema=new Schema({
     },
     fileType:{
         type:String,
-        enum:[pdf,docx],
+        enum:["pdf","docx"],
         required:[true,"File type required"]
     },
     extractText:{

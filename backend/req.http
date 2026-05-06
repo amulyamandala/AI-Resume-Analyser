@@ -43,3 +43,6 @@ Content-Type: application/json
 {
     "refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Zjg2NTIxMTNiZTJhMDFmNmQzZjBhNSIsImVtYWlsIjoidXNlckBnbWFpbC5jb20iLCJpYXQiOjE3Nzc5OTQ3ODAsImV4cCI6MTc3ODU5OTU4MH0.cfi-pgXmws_e6NnpNiKYwd25rFgy9gdn6C21bKUDsk4"
 }
+
+### Upload Resume
+POST http://localhost:5000/resume-api/upload
