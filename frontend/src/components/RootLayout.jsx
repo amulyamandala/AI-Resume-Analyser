@@ -20,6 +20,7 @@ function RootLayout() {
     <div>
       <Header />
         <div className="min-h-screen mx-32">
+            <p>app</p>
           <Outlet />
         </div>
       <Footer />
