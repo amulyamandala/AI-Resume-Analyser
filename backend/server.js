@@ -5,11 +5,17 @@ import { userApp } from './API/userAPI.js'
 import { resumeApp } from './API/resumeAPI.js'
 import { analysisApp } from './API/analysisAPI.js'
 import cookieParser from "cookie-parser"
+import cors from 'cors'
 
 config()
  const app=exp()
  app.use(exp.json())
  app.use(cookieParser())
+ //cors configuration this allows the backend and frontend to interact 
+ app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+}))
  app.use("/user-api",userApp)
  app.use("/resume-api",resumeApp)
  app.use("/analysis-api",analysisApp)
