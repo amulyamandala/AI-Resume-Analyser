@@ -103,5 +103,5 @@ export const suggestionBox ="rounded-xl border border-[#f0f0f3] bg-[#fafafa] p-5
 
 // =========================FOOTER =========================
 
-export const footer = "bg-white border-t border-[#f0f0f3] px-12 py-16 text-sm text-[#60646c]";
+export const footer = "bg-black border-t border-[#f0f0f3] px-12 py-16 text-sm text-[#60646c]";
 export const footerLink ="text-[#60646c] hover:text-black transition";

@@ -1,10 +1,11 @@
 import React from 'react'
-
+import { footer } from '../styles/common'
+import { footerLink } from '../styles/common'
 function Footer() {
   return (
-    <footer className="bg-[#f5f5f7] border-t border-[#e8e8ed] mt-12">
+    <footer className={footer}>
       <div className="max-w-5xl mx-auto px-6 py-6 text-center">
-        <p className="text-sm text-[#6e6e73] font-medium"> 2026 AI-RESUME-ANALYSER</p>
+        <p className={footerLink}> 2026 AI-RESUME-ANALYSER</p>
       </div>
     </footer>
   )
