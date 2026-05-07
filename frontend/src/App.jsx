@@ -5,7 +5,8 @@ import React from 'react'
 import { useContext } from "react";
 function App() {
   return (
-    <div>app</div>
+    <div><RootLayout>
+      app</RootLayout></div>
   )
 }
 
