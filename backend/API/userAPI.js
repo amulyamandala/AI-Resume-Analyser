@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken'
 const {sign,verify}=jwt
 export const userApp=exp.Router()
 //Registration route
-userApp.post("/user",async(req,res)=>{
+userApp.post("/register",async(req,res)=>{
     try{
         const newUser=req.body
         newUser.password=await hash(newUser.password,12)

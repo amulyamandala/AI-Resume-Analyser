@@ -56,7 +56,7 @@ export const useAuthStore = create((set) => ({
       });
 
       const res = await axios.post(
-        `${BASE_URL}/user-api/user`,
+        `${BASE_URL}/user-api/register`,
         userData,
         {
           withCredentials: true,
