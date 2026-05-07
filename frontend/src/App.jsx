@@ -10,6 +10,7 @@ import Login from "./components/Login";
 import react from 'react'
 import {Toaster} from "react-hot-toast";
 import { useContext } from "react";
+import Dashboard from "./components/Dashboard";
 function App() {
 const routerObj=createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const routerObj=createBrowserRouter([
       {
         path:"login",
         element:<Login />,
+      },
+      {
+        path:"dashboard",
+        element:<Dashboard />
       },
       {
         path: "user-profile",
