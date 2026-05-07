@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate } from "react-router";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../store/authStore";
