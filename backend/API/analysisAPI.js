@@ -1,11 +1,11 @@
 import exp from "express"
-import { AnalysisModel } from "../model/analysisModel"
-import { UserModel } from "../model/userModel"
+import { AnalysisModel } from "../model/analysisModel.js"
+import { UserModel } from "../model/userModel.js"
 import { config } from "dotenv"
-import pdfParse from 'pdf-parse'
-import { verifyToken } from "../middleware/verifyToken"
-import { resumeApp } from "./resumeAPI"
-import { ResumeModel } from "../model/resumeModel"
+import * as pdfParse from "pdf-parse";
+import { verifyToken } from "../middleware/verifyToken.js"
+import { resumeApp } from "./resumeAPI.js"
+import { ResumeModel } from "../model/resumeModel.js"
 export const analysisApp=exp.Router()
 //analyze the resume
 analysisApp.post("/run/:resumeId",verifyToken,async(req,res)=>{
@@ -25,7 +25,7 @@ analysisApp.post("/run/:resumeId",verifyToken,async(req,res)=>{
         }
         const arrayBuffer = await response.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer)
-        const parsed=await pdfParse(buffer)
+       const parsed = await pdfParse.default(buffer);
         const text = parsed.text.toLowerCase()
         const keywords=["javascript","node","web development","python","data structures","machine learning","react","mongodb","java","c","agentic ai","soft skills","communication"]
         const keywordsMatched = keywords.filter(k => text.includes(k));

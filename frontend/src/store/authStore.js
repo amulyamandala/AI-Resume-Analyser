@@ -56,7 +56,7 @@ export const useAuthStore = create((set) => ({
       });
 
       const res = await axios.post(
-        `${BASE_URL}/user-api/register`,
+        `${BASE_URL}/user-api/user`,
         userData,
         {
           withCredentials: true,
@@ -119,8 +119,8 @@ export const useAuthStore = create((set) => ({
       );
 
       set({
-        currentUser: res.data.payload,
-        isAuthenticated: true,
+        currentUser: res.data.payload || null,
+        isAuthenticated: !!res.data.authenticated,
         loading: false,
         error: null,
       });

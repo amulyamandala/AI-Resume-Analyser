@@ -48,6 +48,11 @@ userApp.post("/login",async(req,res)=>{
         sameSite:"lax",
         secure:false,
     })
+    res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false,
+})
     let userObj=user.toObject()
     delete userObj.password
     res.status(200).json({message:"Login successful",token,payload:userObj})
@@ -59,6 +64,10 @@ userApp.get("/logout",(req,res)=>{
         secure:false,
         sameSite:"lax",
     })
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax" })
     res.status(200).json({messsage:"Logout Succesful"})
 })
 //check-auth 
@@ -108,21 +117,26 @@ userApp.put("/password",async(req,res)=>{
     res.status(200).json({message:"Password updated"})
 })
 //refresh-token
-userApp.post("/refresh",async(req,res)=>{
-    const refreshToken=req.cookies.refreshToken || req.body.refreshToken
-    if(!refreshToken)
-        return res.status(401).json({message:"Token not found"})
-    const decoded=verify(refreshToken,process.env.JWT_REFRESH)
-    const user=await UserModel.findById(decoded.id)
-     if(!user)
-            return res.status(401).json({message:"Invalid refresh token"})
-    if (user.refreshToken !== refreshToken) 
-        return res.status(403).json({ message: "Invalid refresh token" });
-    const newAccesstoken=sign({id:user._id,email:user.email},process.env.JWT_SECRET,{expiresIn:"2d"})
-    res.cookie("token",newAccesstoken,{
-        httpOnly:true,
-        secure:false,
-        sameSite:"lax"
-    })
-    res.status(200).json({message:"Token Refreshed",token:newAccesstoken})
+userApp.post("/refresh", async (req, res) => {
+  try{
+    const refreshToken = req.cookies.refreshToken || req.body.refreshToken
+    if (!refreshToken)
+      return res.status(401).json({ message: "Token not found" })
+
+    const decoded = verify(refreshToken, process.env.JWT_REFRESH) // can throw!
+    const user = await UserModel.findById(decoded.id)
+    if (!user || user.refreshToken !== refreshToken)
+      return res.status(403).json({ message: "Invalid refresh token" })
+
+    const newAccessToken = sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "2d" }
+    )
+    res.cookie("token", newAccessToken, { httpOnly: true, secure: false, sameSite: "lax" })
+    res.status(200).json({ message: "Token Refreshed", token: newAccessToken })
+  } 
+  catch(err) {
+    res.status(401).json({ message: "Invalid or expired refresh token" })
+  }
 })
