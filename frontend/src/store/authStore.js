@@ -1,14 +1,11 @@
 import { create } from "zustand";
 import axios from "axios";
-
 const BASE_URL = "http://localhost:5000";
-
 export const useAuthStore = create((set) => ({
   currentUser: null,
   isAuthenticated: false,
   loading: false,
   error: null,
-
   // LOGIN
   login: async (userCred) => {
     try {
@@ -16,7 +13,6 @@ export const useAuthStore = create((set) => ({
         loading: true,
         error: null,
       });
-
       const res = await axios.post(
         `${BASE_URL}/user-api/login`,
         userCred,
@@ -24,14 +20,12 @@ export const useAuthStore = create((set) => ({
           withCredentials: true,
         }
       );
-
       set({
         currentUser: res.data.payload,
         isAuthenticated: true,
         loading: false,
         error: null,
       });
-
       return true;
     } catch (err) {
       set({
@@ -42,11 +36,9 @@ export const useAuthStore = create((set) => ({
           err.response?.data?.message ||
           "Login failed",
       });
-
       return false;
     }
   },
-
   // REGISTER
   register: async (userData) => {
     try {
@@ -54,7 +46,6 @@ export const useAuthStore = create((set) => ({
         loading: true,
         error: null,
       });
-
       const res = await axios.post(
         `${BASE_URL}/user-api/register`,
         userData,
@@ -62,12 +53,10 @@ export const useAuthStore = create((set) => ({
           withCredentials: true,
         }
       );
-
       set({
         loading: false,
         error: null,
       });
-
       return res.data;
     } catch (err) {
       set({
@@ -78,7 +67,6 @@ export const useAuthStore = create((set) => ({
       });
     }
   },
-
   // LOGOUT
   logout: async () => {
     try {
@@ -88,7 +76,6 @@ export const useAuthStore = create((set) => ({
           withCredentials: true,
         }
       );
-
       set({
         currentUser: null,
         isAuthenticated: false,
@@ -103,37 +90,59 @@ export const useAuthStore = create((set) => ({
       });
     }
   },
-
   // CHECK AUTH
   checkAuth: async () => {
     try {
       set({
         loading: true,
       });
-
       const res = await axios.get(
         `${BASE_URL}/user-api/check-auth`,
         {
           withCredentials: true,
         }
       );
-
       set({
         currentUser: res.data.payload || null,
-        isAuthenticated: !!res.data.authenticated,
+        isAuthenticated: true,
         loading: false,
         error: null,
       });
+
     } catch (err) {
-      set({
-        currentUser: null,
-        isAuthenticated: false,
-        loading: false,
-        error: null,
-      });
+      try {
+        //refresh token
+        await axios.post(
+          `${BASE_URL}/user-api/refresh`,
+          {},
+          {
+            withCredentials: true,
+          }
+        );
+        //retry check-auth
+        const res = await axios.get(
+          `${BASE_URL}/user-api/check-auth`,
+          {
+            withCredentials: true,
+          }
+        );
+        set({
+          currentUser: res.data.payload || null,
+          isAuthenticated: true,
+          loading: false,
+          error: null,
+        });
+
+      } catch (refreshErr) {
+        set({
+          currentUser: null,
+          isAuthenticated: false,
+          loading: false,
+          error: null,
+        });
+      }
     }
   },
-
   // CLEAR ERROR
   clearError: () => {
     set({

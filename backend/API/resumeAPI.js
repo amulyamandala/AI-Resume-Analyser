@@ -12,13 +12,13 @@ resumeApp.post("/upload",verifyToken,upload.single("resume"),async(req,res)=>{
     if(!req.file){
         return res.status(400).json({message:"No file uploaded"})
     }
-    const result= await uploadToCloudinary(req.file.path)
+    const result= await uploadToCloudinary(req.file.buffer)
     const newResume=new ResumeModel({
-        userId: req.user.id,
-        fileUrl: result.secure_url,
-        fileName: req.file.originalname,
-        fileType:fileType
-      });
+      userId:req.user.id,
+      fileUrl:result.secure_url,
+      fileName:req.file.originalname,
+      fileType:req.file.mimetype
+});
       await newResume.save()
       res.status(201).json({message:"Resume uploaded",resume:newResume})
     }
@@ -28,7 +28,7 @@ resumeApp.post("/upload",verifyToken,upload.single("resume"),async(req,res)=>{
     }
 })
 //display the users resume in the page 
-resumeApp.get("/resume",verifyToken,async(req,res)=>{
+resumeApp.get("/resume/:id",verifyToken,async(req,res)=>{
     try{
         const resume=await ResumeModel.findById(req.params.id)
         if(!resume){

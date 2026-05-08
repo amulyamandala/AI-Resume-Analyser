@@ -15,7 +15,7 @@ const resumeSchema=new Schema({
     },
     fileType:{
         type:String,
-        enum:["pdf","docx"],
+        enum:["application/pdf","application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document","image/jpeg","image/png"],
         required:[true,"File type required"]
     },
     extractText:{
