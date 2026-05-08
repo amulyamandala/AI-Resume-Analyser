@@ -105,3 +105,9 @@ export const suggestionBox ="rounded-xl border border-[#f0f0f3] bg-[#fafafa] p-5
 
 export const footer = "bg-black border-t border-[#f0f0f3] px-12 py-16 text-sm text-[#60646c]";
 export const footerLink ="text-[#60646c] hover:text-black transition";
+// ========================= HEADER / NAV =========================
+
+export const navContainer = "max-w-14xl mx-auto h-20 flex items-center justify-between px-6 md:px-12 border-b border-[#f0f0f3]";
+export const navLogo = "text-2xl font-semibold tracking-[-1px] text-[#171717]";
+export const navLinks ="flex items-center gap-5";
+export const activeNavLink ="text-sm font-medium text-black";

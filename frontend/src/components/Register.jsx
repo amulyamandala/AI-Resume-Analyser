@@ -37,8 +37,8 @@ function Register() {
         navigate("/login");
       }
     } catch (err) {
-      setApiError("Registration failed. Please try again.");
-    } finally {
+      setApiError(err.response?.data?.message || err.message || "Registration Failed"); 
+       } finally {
       setLoading(false);
     }
   };
@@ -47,13 +47,13 @@ function Register() {
     <div className={`${pageWrapper} ${centeredFlex} px-4 py-20`}>
 
       {/* Card */}
-      <div className={`${featureCard} w-full max-w-xl`}>
+      <div className={`${featureCard} w-full max-w-xl shadow-lg p-8`}>
 
         {/* Heading */}
         <div className="text-center mb-8">
 
           <h1 className={heroTitle}>
-            Create Account
+            ReZure
           </h1>
 
           <p className={`${bodyText} mt-3`}>

@@ -41,7 +41,7 @@ function Login() {
         {/* Heading */}
         <div className="text-center mb-8">
           <h1 className={heroTitle}>
-            Welcome Back
+            Welcome
           </h1>
 
           <p className={`${bodyText} mt-3`}>
