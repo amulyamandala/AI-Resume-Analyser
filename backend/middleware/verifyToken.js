@@ -15,7 +15,10 @@ return (req,res,next)=>{
    
     //is token verified or not 
     const decodedToken=verify(token,process.env.JWT_SECRET)
-   if(!allowedRoles.includes(decodedToken.role)){
+  if(
+  allowedRoles.length > 0 &&
+  !allowedRoles.includes(decodedToken.role)
+){
     return res.status(403).json({message:"you are not authorized from middleware"})
    }
     //add decoded token 

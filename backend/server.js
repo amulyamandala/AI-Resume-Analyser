@@ -4,6 +4,7 @@ import { config } from 'dotenv'
 import { userApp } from './API/userAPI.js'
 import { resumeApp } from './API/resumeAPI.js'
 import { analysisApp } from './API/analysisAPI.js'
+import { studyPlanApp } from './API/studyplanAPI.js'
 import cookieParser from "cookie-parser"
 import cors from 'cors'
 
@@ -20,6 +21,7 @@ config()
  app.use("/user-api",userApp)
  app.use("/resume-api",resumeApp)
  app.use("/analysis-api",analysisApp)
+app.use("/studyplan-api",studyPlanApp)
  const port=process.env.PORT||5000
  const connectionDb=async()=>{
     try{
