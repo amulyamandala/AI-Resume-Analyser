@@ -36,4 +36,4 @@ const studyPlanSchema = new Schema(
     strict: "throw",
   }
 );
-export const StudyPlan = model("studyPlan", studyPlanSchema);
+export const StudyPlan = model("studyplan", studyPlanSchema);

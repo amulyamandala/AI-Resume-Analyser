@@ -2,7 +2,7 @@ import exp from "express";
 import axios from "axios";
 
 import { AnalysisModel } from "../model/analysisModel.js";
-import {StudyPlanModel} from "../model/studyplanModel.js";
+import {StudyPlan} from "../model/studyplanModel.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 
 const studyPlanApp = exp.Router();
