@@ -25,3 +25,8 @@ Thumbs.db
 # Editor files
 .vscode/
 .idea/
+
+uploads/
+*.pdf
+*.doc
+*.docx
