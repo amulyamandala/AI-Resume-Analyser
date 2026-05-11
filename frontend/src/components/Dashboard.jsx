@@ -172,7 +172,7 @@ useEffect(()=>{
                   }
               </div>
                 {/* DELETE */}
-              <button onClick={() => handleDelete(resume._id)} className="h-11 px-6 rounded-md bg-black hover:bg-[#1a1a1a] text-white text-sm font-medium transition">
+              <button onClick={() => handleDelete(resume._id)}  className="mt-6 h-11 px-6 rounded-md bg-black hover:bg-[#1a1a1a] text-white text-sm font-medium transition">
                 Delete Resume
               </button>
               </div>
