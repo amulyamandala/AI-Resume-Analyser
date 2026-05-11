@@ -56,6 +56,20 @@ function StudyPlan() {
     }
   };
 
+  const handleDownloadRoadmap = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/pdf-api/generate-roadmap",
+        { studyPlan },
+        { withCredentials: true }
+      );
+      window.open(`http://localhost:5000${res.data.downloadUrl}`, "_blank");
+    } catch (err) {
+      console.log(err);
+      setError("Failed to download roadmap PDF");
+    }
+  };
+
   useEffect(()=>{
     const fetchStudyPlan=async()=>{
       try {
@@ -228,8 +242,12 @@ function StudyPlan() {
             >
               {generating ? 'Generating...' : 'Generate New Plan'}
             </button>
-            <button className={secondaryBtn}>Download Roadmap</button>
-            <button className={secondaryBtn}>Share with Mentor</button>
+            <button 
+              onClick={handleDownloadRoadmap}
+              className={secondaryBtn}
+            >
+              Download Roadmap
+            </button>
           </div>
         </div>
       </div>

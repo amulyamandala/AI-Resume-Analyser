@@ -37,6 +37,8 @@ function Dashboard() {
   const [error,setError]=useState(null);
   const [numPages,setNumPages]=useState(0);
   const [generatingPlan,setGeneratingPlan]=useState(false);
+  const [improving, setImproving] = useState(false);
+  const [improvedData, setImprovedData] = useState(null);
   //fetch resumes
   const fetchResumes=async()=>{
     try{
@@ -86,22 +88,69 @@ function Dashboard() {
   const handleGenerateStudyPlan=async()=>{
     try{
       setGeneratingPlan(true);
-      if(!analysis?._id){
-        setError("No analysis found. Please analyze your resume first.");
+      const storedId = localStorage.getItem("analysisId");
+      
+      // Look for ID in all possible shapes of the analysis object
+      const targetId = 
+        analysis?.analysisId || 
+        analysis?._id || 
+        analysis?.analysis?._id || 
+        (storedId !== "undefined" ? storedId : null);
+      
+      console.log("Full Analysis State:", analysis);
+      console.log("Determined Target ID:", targetId);
+
+      if(!targetId || targetId === "undefined"){
+        setError("No analysis found. Please re-analyze your resume.");
+        setGeneratingPlan(false);
         return;
       }
       const res=await axios.post(
-        `http://localhost:5000/studyplan-api/generate/${analysis._id}`,
+        `http://localhost:5000/studyplan-api/generate/${targetId}`,
         {},
         { withCredentials: true }
       );
-      localStorage.setItem("analysisId",analysis._id);
+      localStorage.setItem("analysisId", targetId);
       navigate("/study-plan");
     }catch(err){
       console.log(err);
       setError(err.response?.data?.message || "Failed to generate study plan");
     }finally{
       setGeneratingPlan(false);
+    }
+  };
+
+  // improve resume
+  const handleImproveResume = async () => {
+    try {
+      setImproving(true);
+      setError(null);
+
+      const payload = {
+        resumeText: analysis.resumeText,
+        jobDescription: localStorage.getItem("jobDescription") || "Software Engineer Role",
+        missingKeywords: analysis.keywordsMissing || analysis.missingKeywords || [],
+      };
+
+      console.log("Improvement Payload:", payload);
+
+      const res = await axios.post(
+        "http://localhost:5000/improve-resume-api/generate",
+        payload,
+        { withCredentials: true }
+      );
+
+      setImprovedData(res.data);
+      // Scroll to the improved section
+      setTimeout(() => {
+        document.getElementById("improved-section")?.scrollIntoView({ behavior: "smooth" });
+      }, 500);
+
+    } catch (err) {
+      console.log(err);
+      setError(err.response?.data?.message || "Failed to improve resume");
+    } finally {
+      setImproving(false);
     }
   };
   useEffect(()=>{fetchResumes();},[]);
@@ -201,6 +250,35 @@ useEffect(()=>{
               <button onClick={() => handleDelete(resume._id)}  className="mt-6 h-11 px-6 rounded-md bg-black hover:bg-[#1a1a1a] text-white text-sm font-medium transition">
                 Delete Resume
               </button>
+
+              <button 
+                onClick={handleImproveResume} 
+                disabled={improving}
+                className="mt-6 ml-4 h-11 px-6 rounded-md border border-black hover:bg-[#fafafa] text-black text-sm font-medium transition disabled:opacity-50"
+              >
+                {improving ? "Optimizing..." : "Improve Resume"}
+              </button>
+
+              {/* MATCH METRICS (Moved here) */}
+              {(analysis.matchScore || analysis.atsScore) !== undefined && (
+                <div className={`${featureCard} mt-8`}>
+                  <h2 className={sectionTitle}>Match Metrics</h2>
+                  <div className="mt-6 space-y-4">
+                    <div className="flex justify-between items-center">
+                      <p className={bodyText}>Keyword Match</p>
+                      <p className="font-semibold">{analysis.matchScore || analysis.atsScore || 0}%</p>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <p className={bodyText}>JD Alignment</p>
+                      <p className="font-semibold">{(analysis.matchScore || analysis.atsScore) >= 80 ? "High" : "Medium"}</p>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <p className={bodyText}>Role Fit</p>
+                      <span className={keywordMatched}>Strong Fit</span>
+                    </div>
+                  </div>
+                </div>
+              )}
               </div>
             ))
           }
@@ -212,33 +290,37 @@ useEffect(()=>{
                 <div className={featureCard}>
                   <h2 className={sectionTitle}>ATS Analysis</h2>
                   <div className="mt-6">
-                    <p className={scoreText}>{analysis.atsScore}%</p>
-                    <p className={analysis.atsScore>=70?scoreSuccess:scoreWarning}>
-                      {analysis.atsScore >= 70? "Strong Resume": "Needs Improvement"}
+                    <p className={scoreText}>{analysis.matchScore || analysis.atsScore || 0}%</p>
+                    <p className={(analysis.matchScore || analysis.atsScore) >= 70 ? scoreSuccess : scoreWarning}>
+                      {(analysis.matchScore || analysis.atsScore) >= 70 ? (analysis.matchScore ? "Strong Match" : "Strong Resume") : "Needs Improvement"}
                     </p>
                   </div>
                 </div>
                 {/* FORMAT SCORE */}
-              <div className={featureCard}>
-                <h2 className={sectionTitle}>Resume Formatting</h2>
-                  <div className="mt-6">
-                  <p className={scoreText1}>{analysis.formatScore}%</p>
-                  <p className={mutedText}>Formatting Quality Score</p>
-                </div>
-              </div>
-               {/* READABILITY SCORE */}
-              <div className={featureCard}>
-                 <h2 className={sectionTitle}>Readability Score</h2>
-                  <div className="mt-6">
-                     <p className={scoreText1}>{analysis.readabilityScore}%</p>
-                      <p className={mutedText}> Resume Readability Analysis</p>
+              {analysis.formatScore !== undefined && (
+                <div className={featureCard}>
+                  <h2 className={sectionTitle}>Resume Formatting</h2>
+                    <div className="mt-6">
+                    <p className={scoreText1}>{analysis.formatScore}%</p>
+                    <p className={mutedText}>Formatting Quality Score</p>
                   </div>
-              </div>
+                </div>
+              )}
+               {/* READABILITY SCORE */}
+               {analysis.readabilityScore !== undefined && (
+                <div className={featureCard}>
+                   <h2 className={sectionTitle}>Readability Score</h2>
+                    <div className="mt-6">
+                       <p className={scoreText1}>{analysis.readabilityScore}%</p>
+                        <p className={mutedText}> Resume Readability Analysis</p>
+                    </div>
+                </div>
+               )}
                 {/* MATCHED KEYWORDS */}
                 <div className={featureCard}>
                   <h2 className={sectionTitle}>Matched Keywords</h2>
                   <div className="flex flex-wrap gap-3 mt-6">
-                    {analysis.keywordsMatched?.map((keyword,index)=>(
+                    {(analysis.keywordsMatched || analysis.matchedKeywords)?.map((keyword,index)=>(
                           <span key={index} className={keywordMatched}>
                             {keyword}
                           </span>
@@ -249,23 +331,25 @@ useEffect(()=>{
                 <div className={featureCard}>
                   <h2 className={sectionTitle}>Missing Keywords</h2>
                   <div className="flex flex-wrap gap-3 mt-6">
-                    {analysis.keywordsMissing?.map((keyword,index)=>(
+                    {(analysis.keywordsMissing || analysis.missingKeywords)?.map((keyword,index)=>(
                           <span key={index} className={keywordMissing}>
                             {keyword}
                           </span>
                         ))}
                   </div>
                 </div>
-                {/* SUGGESTIONS */}
-                <div className={suggestionBox}>
-                  <h2 className={sectionTitle}>AI Suggestions</h2>
-                  <ul className="mt-6 space-y-4">
-                    {analysis.suggestions?.map((item,index)=>(
-                          <li key={index} className={bodyText}>
-                            • {item}
-                          </li>
-                        ))}
-                  </ul>
+                {/* SUGGESTIONS ONLY (Metrics moved to left) */}
+                <div className="w-full">
+                  <div className={suggestionBox}>
+                    <h2 className={sectionTitle}>AI Suggestions</h2>
+                    <ul className="mt-6 space-y-4">
+                      {analysis.suggestions?.map((item, index) => (
+                        <li key={index} className={bodyText}>
+                          • {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
 
                 {/* GENERATE STUDY PLAN BUTTON */}
@@ -281,6 +365,77 @@ useEffect(()=>{
             )
           }
         </div>
+
+        {/* IMPROVED RESUME SECTION */}
+        {improvedData && (
+          <div id="improved-section" className="mt-16 pt-16 border-t border-[#e5e5e5]">
+            <div className="flex items-center justify-between mb-10">
+              <div>
+                <h2 className={heroTitle}>Optimized Resume</h2>
+                <p className={`${bodyText} mt-2`}>AI has rewritten your resume for maximum ATS compatibility.</p>
+              </div>
+              <div className="text-right">
+                <div className="flex items-center gap-4">
+                  <div className="text-center">
+                    <p className={mutedText}>Old Score</p>
+                    <p className="text-2xl font-bold text-gray-400">{improvedData.oldScore}%</p>
+                  </div>
+                  <div className="text-3xl font-light text-gray-300">→</div>
+                  <div className="text-center">
+                    <p className={mutedText}>New Score</p>
+                    <p className="text-4xl font-bold text-green-600">{improvedData.newScore}%</p>
+                  </div>
+                </div>
+                <p className="text-sm font-medium text-green-600 mt-1">+{improvedData.scoreImprovement}% Improvement</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* ORIGINAL TEXT */}
+              <div className={featureCard}>
+                <h3 className={cardTitle}>Original Text</h3>
+                <div className="mt-6 p-6 bg-[#fafafa] rounded-xl font-mono text-sm whitespace-pre-wrap h-[600px] overflow-y-auto border border-[#f0f0f3]">
+                  {analysis.resumeText}
+                </div>
+              </div>
+
+              {/* IMPROVED TEXT */}
+              <div className={featureCard}>
+                <h3 className={cardTitle}>AI Optimized Text</h3>
+                <div className="mt-6 p-6 bg-white rounded-xl font-mono text-sm whitespace-pre-wrap h-[600px] overflow-y-auto border border-green-100 shadow-sm">
+                  {improvedData.improvedResume}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-10 flex justify-center gap-4">
+              <button 
+                onClick={() => {
+                  setImprovedData(null);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className={secondaryBtn}
+              >
+                Back to Analysis
+              </button>
+              <button 
+                className={primaryBtn}
+                onClick={async () => {
+                  try {
+                    const res = await axios.post("http://localhost:5000/pdf-api/generate", {
+                      improvedResume: improvedData.improvedResume
+                    }, { withCredentials: true });
+                    window.open(`http://localhost:5000${res.data.downloadUrl}`, "_blank");
+                  } catch (err) {
+                    setError("PDF generation failed");
+                  }
+                }}
+              >
+                Download Optimized PDF
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   </div>

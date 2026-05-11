@@ -19,7 +19,7 @@ function RootLayout() {
   return (
     <div>
       <Header />
-        <div className="min-h-screen mx-32">
+        <div className="min-h-screen"> {/*mx-32 for it to look like old one */}
           <Outlet />
         </div>
       <Footer />

@@ -5,8 +5,13 @@ import { userApp } from './API/userAPI.js'
 import { resumeApp } from './API/resumeAPI.js'
 import { analysisApp } from './API/analysisAPI.js'
 import { studyPlanApp } from './API/studyplanAPI.js'
+import { improveResumeApp } from './API/improveResumeAPI.js'
+import { pdfApp } from "./API/pdfAPI.js";
+import { resumeHistoryApp } from './API/resumeHistoryAPI.js'
+import { jobMatchApp } from "./API/jobMatchAPI.js";
 import cookieParser from "cookie-parser"
 import cors from 'cors'
+
 
 config()
  const app=exp()
@@ -17,11 +22,16 @@ config()
 }))
  app.use(exp.json())
  app.use(cookieParser())
+ app.use("/uploads", exp.static("uploads"));
 
  app.use("/user-api",userApp)
  app.use("/resume-api",resumeApp)
  app.use("/analysis-api",analysisApp)
 app.use("/studyplan-api",studyPlanApp)
+app.use("/job-match-api", jobMatchApp);
+app.use("/pdf-api", pdfApp);
+app.use("/resume-history-api",resumeHistoryApp)
+app.use("/improve-resume-api",improveResumeApp)
  const port=process.env.PORT||5000
  const connectionDb=async()=>{
     try{

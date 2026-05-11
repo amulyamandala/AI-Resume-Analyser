@@ -74,7 +74,7 @@ analysisApp.post("/run/:resumeId",verifyToken,async(req,res)=>{
         formatScore,
         readabilityScore})
         await analysis.save()
-        res.status(201).json({message:"Analysis completed successfully",analysis})
+        res.status(201).json({message:"Analysis completed successfully",analysis, resumeText: text})
      }
         catch(err){
         console.log(err);
@@ -82,45 +82,45 @@ analysisApp.post("/run/:resumeId",verifyToken,async(req,res)=>{
   }
 })
 //history
-analysisApp.get("/history/:resumeId", verifyToken, async (req, res) => {
+analysisApp.get("/history/:resumeId",verifyToken,async(req,res)=>{
   try{
-    const resume = await ResumeModel.findById(req.params.resumeId);
-    if(!resume || resume.userId.toString() !== req.user.id){
-      return res.status(403).json({ message: "Unauthorized" });
+    const resume=await ResumeModel.findById(req.params.resumeId);
+    if(!resume||resume.userId.toString()!==req.user.id){
+      return res.status(403).json({message:"Unauthorized"});
     }
-    const history = await AnalysisModel.find({ resumeId: req.params.resumeId }).sort({ createdAt: -1 });
-    res.status(200).json({ message: "Analysis history", history });
+    const history=await AnalysisModel.find({resumeId:req.params.resumeId}).sort({createdAt:-1});
+    res.status(200).json({message:"Analysis history",history});
   } catch(err){
-    res.status(500).json({ message: "Error fetching history" });
+    res.status(500).json({message:"Error fetching history"});
   }
 });
 //get analysis results 
-analysisApp.get("/:resumeId", verifyToken, async (req, res) => {
-  const resume = await ResumeModel.findById(req.params.resumeId);
-  if(!resume || resume.userId.toString() !== req.user.id){
-    return res.status(403).json({ message: "Unauthorized" });
+analysisApp.get("/:resumeId",verifyToken,async(req,res)=>{
+  const resume=await ResumeModel.findById(req.params.resumeId);
+  if(!resume||resume.userId.toString()!==req.user.id){
+    return res.status(403).json({message:"Unauthorized"});
   }
-  const analysis = await AnalysisModel.findOne({ resumeId: req.params.resumeId }).sort({ createdAt: -1 });
+  const analysis=await AnalysisModel.findOne({resumeId:req.params.resumeId}).sort({createdAt:-1});
   if(!analysis){
-    return res.status(404).json({ message: "Analysis not found" });
+    return res.status(404).json({message:"Analysis not found"});
   }
-  res.status(200).json({ message: "Analysis fetched", analysis });
+  res.status(200).json({message:"Analysis fetched",analysis});
 });
   //delete analysis
-  analysisApp.delete("/:id", verifyToken, async (req, res) => {
+  analysisApp.delete("/:id",verifyToken,async(req,res)=>{
   try{
-    const analysis = await AnalysisModel.findById(req.params.id);
+    const analysis=await AnalysisModel.findById(req.params.id);
     if(!analysis){
-      return res.status(404).json({ message: "Analysis not found" });
+      return res.status(404).json({message:"Analysis not found"});
     }
-    const resume = await ResumeModel.findById(analysis.resumeId);
-    if(!resume || resume.userId.toString() !== req.user.id){
-      return res.status(403).json({ message: "Unauthorized" });
+    const resume=await ResumeModel.findById(analysis.resumeId);
+    if(!resume||resume.userId.toString()!==req.user.id){
+      return res.status(403).json({message:"Unauthorized"});
     }
     await AnalysisModel.findByIdAndDelete(req.params.id);
-    res.status(200).json({message: "Analysis deleted"});
+    res.status(200).json({message:"Analysis deleted"});
   }
   catch(err){
-    res.status(500).json({ message: "Error deleting analysis" });
+    res.status(500).json({message:"Error deleting analysis"});
   }
 })

@@ -80,7 +80,7 @@ export const navbar ="h-16 w-full bg-white border-b border-[#f0f0f3] px-6 md:px-
 
 // =========================HERO SECTION=========================
 
-export const heroSection ="relative overflow-hidden bg-white py-28 px-6 md:px-12";
+export const heroSection ="relative overflow-hidden bg-white py-24 sm:py-32";
 export const heroGradient ="absolute inset-0 bg-gradient-to-b from-[#cfe7ff] via-[#a8c8e8]/30 to-white opacity-60 pointer-events-none";
 export const heroContent ="relative z-10 max-w-5xl mx-auto text-center";
 

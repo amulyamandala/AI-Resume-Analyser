@@ -53,10 +53,11 @@ studyPlanApp.post("/generate/:analysisId",verifyToken,async(req,res)=>{
       try{
         response=await axios.post(`https://api.groq.com/openai/v1/chat/completions`,
           {
-            model: "llama-3.3-70b-versatile",
-            messages: [{role: "user", content: prompt}],
-            temperature: 0.7,
-            max_tokens: 2000
+           model: "llama-3.3-70b-versatile",
+           messages: [{role:"user",content:prompt}],
+           temperature: 0.7,
+           max_tokens: 2000,
+           response_format: {type:"json_object"}
           },
           {
             headers: {
@@ -93,11 +94,21 @@ studyPlanApp.post("/generate/:analysisId",verifyToken,async(req,res)=>{
       }
       
       // Filter roadmap to only include expected schema fields
-      const cleanedRoadmap = parsedData.roadmap.map(week => ({
-        week: week.week,
-        title: week.title,
-        tasks: Array.isArray(week.tasks) ? week.tasks : []
-      }));
+      const cleanedRoadmap = parsedData.roadmap.map((week, index) => ({
+       week:
+        typeof week.week === "number"
+          ? week.week
+          : index + 1,
+
+       title:
+        typeof week.title === "string"
+      ? week.title
+      : "Untitled Week",
+
+       tasks:
+    Array.isArray(week.tasks)
+      ? week.tasks.filter(task => typeof task === "string")
+      : []}));
       
       // save study plan
       const studyPlan=await StudyPlan.create({userId: req.user.id,analysisId,weakTopics,roadmap:cleanedRoadmap});
@@ -115,7 +126,7 @@ studyPlanApp.post("/generate/:analysisId",verifyToken,async(req,res)=>{
 );
 studyPlanApp.get("/:analysisId",verifyToken,async(req,res)=>{
     try {
-      const {analysisId} = req.params;
+      const {analysisId}=req.params;
       const studyPlan=await StudyPlan.findOne({analysisId});
       if(!studyPlan){
         return res.status(404).json({message:"Study plan not found"});
