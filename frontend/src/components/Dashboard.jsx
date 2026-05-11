@@ -157,7 +157,7 @@ useEffect(()=>{
           )
         }
         {/* MAIN DASHBOARD */}
-       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+       <div className={dashboardGrid}>
           {/* LEFT SIDE - RESUME */}
           {
             resumes.map((resume)=>(
@@ -174,7 +174,7 @@ useEffect(()=>{
                  Array.from(new Array(numPages),(el,index)=>(
                  <div key={`page_${index + 1}`} className="mb-8 flex justify-center">
                   <Page pageNumber={index + 1}
-                  width={600}
+                  width={450}
                   renderTextLayer={false}
                   renderAnnotationLayer={false}/>
               </div>
@@ -185,9 +185,9 @@ useEffect(()=>{
           </div>
                   )
                   :resume.fileType==="application/vnd.openxmlformats-officedocument.wordprocessingml.document"?(
-                    <div className="w-full max-w-full h-[900px] overflow-auto rounded-xl border border-[#e5e5e5] bg-[#f5f5f5]">
-                      <div ref={docxRef} className="docx-wrapper" />
-                      </div>
+                    <div className="w-full h-[900px] overflow-auto rounded-xl border border-[#e5e5e5] bg-[#f5f5f5] p-2 sm:p-4">
+                       <div ref={docxRef} className="docx-wrapper min-w-max" />
+                         </div>
                       )
                       : (
                         <div className="h-full flex items-center justify-center">

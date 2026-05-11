@@ -42,6 +42,18 @@ resumeApp.get("/resume/:id",verifyToken,async(req,res)=>{
     res.status(500).json({ message: "Error displaying resume" });
   }
 });
+// GET ALL USER RESUMES
+resumeApp.get("/my-resumes",verifyToken,async(req,res)=>{
+    try{
+      const resumes=await ResumeModel.find({userId:req.user.id}).sort({createdAt:-1});
+      res.status(200).json({message:"User resumes fetched",payload:resumes});
+    }
+    catch(err){
+      console.log(err);
+      res.status(500).json({message:"Error fetching resumes"});
+    }
+
+});
 //delete the resume
 resumeApp.delete("/:id",verifyToken,async(req,res)=>{
     try {
@@ -58,4 +70,4 @@ resumeApp.delete("/:id",verifyToken,async(req,res)=>{
 catch(err){
 res.status(500).json({ message: "Error deleting resume" });
 }});
-//
+

@@ -25,21 +25,21 @@ export const colors = {
 };
 
 // =========================LAYOUT=========================
-export const pageWrapper = "min-h-screen bg-white text-[#171717]";
-export const sectionWrapper ="w-full px-6 md:px-12 lg:px-20 py-24";
-export const container ="max-w-[1800px] mx-auto px-8";
+export const pageWrapper ="min-h-screen bg-[#fafafa] overflow-x-hidden";
+export const sectionWrapper ="py-8 sm:py-10 lg:py-14";
+export const container ="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8";
 export const centeredFlex = "flex items-center justify-center";
 export const flexBetween ="flex items-center justify-between";
 
 
 // ========================= TYPOGRAPHY =========================
 
-export const heroTitle = "text-5xl md:text-6xl font-semibold tracking-[-2px] leading-tight text-[#171717]";
-export const sectionTitle ="text-4xl font-semibold tracking-[-1px] text-[#171717]";
-export const cardTitle ="text-lg font-semibold text-[#171717]";
-export const bodyText ="text-base text-[#60646c] leading-7";
+export const heroTitle ="text-4xl sm:text-5xl lg:text-7xl font-semibold tracking-tight text-[#171717] leading-tight";
+export const sectionTitle ="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-[#171717]";
+export const cardTitle ="text-xl sm:text-2xl font-semibold text-[#171717]";
+export const bodyText ="text-sm sm:text-base leading-7 text-[#525252]";
 export const smallText = "text-sm text-[#60646c]";
-export const mutedText = "text-sm text-[#999999]";
+export const mutedText ="text-sm text-[#8a8a8a]";
 export const captionText = "text-[13px] text-[#60646c]";
 export const codeText = "font-mono text-[13px] leading-6";
 export const navLink = "text-sm font-medium text-[#171717] hover:text-black transition";
@@ -54,7 +54,7 @@ export const tertiaryBtn = "text-[#0d74ce] text-sm font-medium hover:underline";
 
 // =========================CARDS=========================
 
-export const featureCard ="bg-white rounded-xl p-6 border border-[#f0f0f3]";
+export const featureCard ="bg-white border border-[#e5e5e5] rounded-2xl p-4 sm:p-6 lg:p-8 shadow-sm overflow-hidden";
 export const darkCard ="bg-[#171717] text-white rounded-xl p-6";
 export const workflowCard = "bg-white rounded-xl p-5 border border-[#f0f0f3]";
 export const testimonialCard = "bg-white rounded-xl p-6 border border-[#f0f0f3]";
@@ -87,17 +87,16 @@ export const heroContent ="relative z-10 max-w-5xl mx-auto text-center";
 
 // =========================DASHBOARD =========================
 
-export const dashboardGrid ="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6";
+export const dashboardGrid ="grid grid-cols-1 xl:grid-cols-[1.2fr_1fr] gap-6 lg:gap-8 items-start";
 export const resumeCard ="bg-white rounded-2xl border border-[#e5e5e5] p-6 shadow-sm hover:shadow-md transition duration-300";
-export const scoreText ="text-5xl font-semibold tracking-[-1px] text-[#171717]";
-export const scoreSuccess ="text-[#171717] text-sm font-medium mt-2";
-export const scoreWarning ="text-[#60646c] text-sm font-medium mt-2";
-export const scoreText1 = "text-3xl font-semibold text-[#171717]";
+export const scoreText ="text-5xl sm:text-6xl font-semibold tracking-tight text-[#171717]";
+export const scoreSuccess ="text-green-600 text-sm sm:text-base font-medium mt-2";
+export const scoreWarning ="text-orange-500 text-sm sm:text-base font-medium mt-2";
+export const scoreText1 ="text-3xl sm:text-4xl font-semibold tracking-tight text-[#171717]";
 // =========================ANALYSIS =========================
-
-export const keywordMissing ="px-4 py-2 rounded-full bg-black text-white text-sm font-medium tracking-[0.2px]";
-export const keywordMatched ="px-4 py-2 rounded-full bg-[#f5f5f5] border border-[#e5e5e5] text-[#60646c] text-sm font-medium tracking-[0.2px]";
-export const suggestionBox ="rounded-2xl border border-[#e5e5e5] bg-[#fafafa] p-6 shadow-sm";
+export const keywordMissing ="px-4 py-2 rounded-full bg-[#f3f3f3] text-[#525252] text-xs sm:text-sm font-medium border border-[#e5e5e5]";
+export const keywordMatched ="px-4 py-2 rounded-full bg-black text-white text-xs sm:text-sm font-medium";
+export const suggestionBox ="bg-white border border-[#e5e5e5] rounded-2xl p-4 sm:p-6 lg:p-8 shadow-sm";
 
 // =========================FOOTER =========================
 
@@ -109,3 +108,17 @@ export const navContainer = "max-w-14xl mx-auto h-20 flex items-center justify-b
 export const navLogo = "text-2xl font-semibold tracking-[-1px] text-[#171717]";
 export const navLinks ="flex items-center gap-5";
 export const activeNavLink ="text-sm font-medium text-black";
+
+
+// ========================= PROFILE =========================
+
+export const profileWrapper ="bg-white rounded-2xl border border-[#e5e5e5] p-8";
+export const profileGrid ="grid grid-cols-1 md:grid-cols-2 gap-6";
+export const profileLabel ="text-sm font-medium text-[#737373] mb-2";
+export const profileValue ="text-lg font-semibold text-[#171717] break-words";
+export const historyCard ="bg-[#fafafa] border border-[#e5e5e5] rounded-xl p-5";
+export const historyTitle ="text-lg font-semibold text-[#171717]";
+export const historyText ="text-sm text-[#525252] mt-3";
+export const profileSectionTitle ="text-4xl font-semibold text-[#171717] mb-10";
+export const divider ="border-t border-[#e5e5e5] my-10";
+export const emptyState ="text-[#737373] text-sm";

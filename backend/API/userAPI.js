@@ -91,11 +91,18 @@ userApp.get("/check-auth",async(req,res)=>{
     }
 })
 //get profile 
-userApp.get("/profile",async(req,res)=>{
-    let idtoken=req.user?.id
-    let userdetails=await UserModel.find({user:idtoken})
-    res.status(200).json({message:"User Details",payload:userdetails})
-})
+userApp.get("/profile",verifyToken,async(req,res)=>{
+    try{
+      const idtoken=req.user.id;
+      const userdetails=await UserModel.findById(idtoken).select("-password");
+      res.status(200).json({message:"User Details",payload:userdetails});
+    }
+    catch(err){
+      console.log(err);
+      res.status(500).json({message:"Error fetching user details"});
+    }
+
+});
 //update password
 userApp.put("/password",async(req,res)=>{
     const{email,password,newpassword}=req.body
