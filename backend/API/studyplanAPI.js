@@ -17,7 +17,7 @@ studyPlanApp.post("/generate/:analysisId",verifyToken,async(req,res)=>{
         return res.status(403).json({message: "Unauthorized"});
       }
       // existing plan check
-      const existingPlan=await StudyPlanModel.findOne({analysisId});
+      const existingPlan=await StudyPlan.findOne({analysisId});
       if(existingPlan){
         return res.status(200).json({message:"Study plan already exists",payload: existingPlan});
       }
@@ -45,15 +45,36 @@ studyPlanApp.post("/generate/:analysisId",verifyToken,async(req,res)=>{
           "tasks":[]
         }]
       }`
-      // GEMINI API CALL
-      const response=await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-        {contents:[{parts: [{text: prompt}]}]});
+      // GROQ API CALL
+      if(!process.env.GROQ_API_KEY){
+        return res.status(500).json({message:"GROQ_API_KEY is not configured"});
+      }
+      let response;
+      try{
+        response=await axios.post(`https://api.groq.com/openai/v1/chat/completions`,
+          {
+            model: "llama-3.3-70b-versatile",
+            messages: [{role: "user", content: prompt}],
+            temperature: 0.7,
+            max_tokens: 2000
+          },
+          {
+            headers: {
+              "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
+              "Content-Type": "application/json"
+            }
+          });
+      }catch(apiErr){
+        console.log("GROQ API Error:", apiErr.response?.data || apiErr.message);
+        return res.status(500).json({message:"GROQ API Error: " + (apiErr.response?.data?.error?.message || apiErr.message)});
+      }
 
       // AI response text
-      const aiText=response?.data?.candidates?.[0]?.content?.parts?.[0]?.text;
-       if(!aiText){ 
+      const aiText=response?.data?.choices?.[0]?.message?.content;
+      if(!aiText){ 
+        console.log("AI Response:", JSON.stringify(response.data));
         return res.status(500).json({message:"No response from AI"});
-       }
+      }
       // remove markdown if exists
       const cleanedText=aiText.replace(/```json/g, "")
                               .replace(/```/g, "")
@@ -70,20 +91,32 @@ studyPlanApp.post("/generate/:analysisId",verifyToken,async(req,res)=>{
       if(!parsedData.roadmap){
         return res.status(500).json({message:"Invalid roadmap structure"});
       }
+      
+      // Filter roadmap to only include expected schema fields
+      const cleanedRoadmap = parsedData.roadmap.map(week => ({
+        week: week.week,
+        title: week.title,
+        tasks: Array.isArray(week.tasks) ? week.tasks : []
+      }));
+      
       // save study plan
-      const studyPlan=await StudyPlanModel.create({userId: req.user.id,analysisId,weakTopics,roadmap:parsedData.roadmap});
+      const studyPlan=await StudyPlan.create({userId: req.user.id,analysisId,weakTopics,roadmap:cleanedRoadmap});
       res.status(201).json({message:"Study plan generated successfully",payload:studyPlan});
     } 
     catch(err){
-      console.log(err);
-      res.status(500).json({message:"Error generating study plan"});
+      console.log("MAIN ERROR - studyplan generate:", {
+        message: err.message,
+        stack: err.stack,
+        name: err.name
+      });
+      res.status(500).json({message:"Error generating study plan: " + err.message});
     }
   }
 );
 studyPlanApp.get("/:analysisId",verifyToken,async(req,res)=>{
     try {
       const {analysisId} = req.params;
-      const studyPlan=await StudyPlanModel.findOne({analysisId});
+      const studyPlan=await StudyPlan.findOne({analysisId});
       if(!studyPlan){
         return res.status(404).json({message:"Study plan not found"});
       }
@@ -93,8 +126,12 @@ studyPlanApp.get("/:analysisId",verifyToken,async(req,res)=>{
       res.status(200).json({payload: studyPlan});
     } 
     catch(err){
-      console.log(err);
-      res.status(500).json({message:"Error fetching study plan"});
+      console.log("MAIN ERROR - studyplan fetch:", {
+        message: err.message,
+        stack: err.stack,
+        name: err.name
+      });
+      res.status(500).json({message:"Error fetching study plan: " + err.message});
     }
   }
 );

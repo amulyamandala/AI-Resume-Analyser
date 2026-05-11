@@ -1,6 +1,7 @@
 import React, {useEffect,useState} from "react";
 import axios from "axios";
 import { Document, Page,pdfjs} from "react-pdf";
+import { useNavigate } from "react-router";
 import {
   pageWrapper,
   sectionWrapper,
@@ -29,11 +30,13 @@ pdfjs.GlobalWorkerOptions.workerSrc = pdfWorker;
 import { renderAsync } from "docx-preview";
 import { useRef } from "react";
 function Dashboard() {
+  const navigate = useNavigate();
   const [resumes,setResumes]=useState([]);
   const [analysis,setAnalysis]=useState(null);
   const [loading,setLoading]=useState(false);
   const [error,setError]=useState(null);
   const [numPages,setNumPages]=useState(0);
+  const [generatingPlan,setGeneratingPlan]=useState(false);
   //fetch resumes
   const fetchResumes=async()=>{
     try{
@@ -78,6 +81,29 @@ function Dashboard() {
     setError("Delete failed");
    }
  };
+
+  //generate study plan and redirect
+  const handleGenerateStudyPlan=async()=>{
+    try{
+      setGeneratingPlan(true);
+      if(!analysis?._id){
+        setError("No analysis found. Please analyze your resume first.");
+        return;
+      }
+      const res=await axios.post(
+        `http://localhost:5000/studyplan-api/generate/${analysis._id}`,
+        {},
+        { withCredentials: true }
+      );
+      localStorage.setItem("analysisId",analysis._id);
+      navigate("/study-plan");
+    }catch(err){
+      console.log(err);
+      setError(err.response?.data?.message || "Failed to generate study plan");
+    }finally{
+      setGeneratingPlan(false);
+    }
+  };
   useEffect(()=>{fetchResumes();},[]);
   useEffect(()=>{
   const storedAnalysis=localStorage.getItem("analysis");
@@ -241,6 +267,15 @@ useEffect(()=>{
                         ))}
                   </ul>
                 </div>
+
+                {/* GENERATE STUDY PLAN BUTTON */}
+                <button
+                  onClick={handleGenerateStudyPlan}
+                  disabled={generatingPlan}
+                  className={`${primaryBtn} w-full ${generatingPlan ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                  {generatingPlan ? 'Generating Study Plan...' : 'Generate Study Plan'}
+                </button>
             
               </div>
             )

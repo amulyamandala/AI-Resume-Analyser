@@ -53,6 +53,7 @@ function Home() {
       localStorage.setItem("resumeId",resumeId);
       const analysisRes=await axios.post(`http://localhost:5000/analysis-api/run/${resumeId}`,{},{withCredentials:true});
       localStorage.setItem("analysis",JSON.stringify(analysisRes.data.analysis));
+      localStorage.setItem("analysisId", analysisRes.data.analysis._id);
       navigate("/dashboard");
     } 
     catch (err) {

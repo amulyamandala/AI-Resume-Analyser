@@ -17,7 +17,7 @@ const studyPlanSchema = new Schema(
 
     generatedBy: {
       type: String,
-      default: "gemini",
+      default: "groq_api_key",
     },
 
     roadmap: [

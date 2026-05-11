@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoutes";
 import Register from "./components/Register";
 import UserProfile from "./components/UserProfile";
 import Login from "./components/Login";
+import StudyPlan from "./components/studyplan";
 import react from 'react'
 import {Toaster} from "react-hot-toast";
 import { useContext } from "react";
@@ -32,6 +33,10 @@ const routerObj=createBrowserRouter([
       {
         path:"dashboard",
         element:<Dashboard />
+      },
+      {
+        path:"study-plan",
+        element:<StudyPlan />
       },
       {
         path: "user-profile",
