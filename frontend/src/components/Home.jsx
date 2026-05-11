@@ -44,11 +44,15 @@ function Home() {
       setError(null);
       const formData = new FormData();
       formData.append("resume", selectedFile);
-      await axios.post( "http://localhost:5000/resume-api/upload",formData,
+      const res=await axios.post( "http://localhost:5000/resume-api/upload",formData,
         {
           withCredentials: true,
         }
       );
+      const resumeId = res.data.resume._id;
+      localStorage.setItem("resumeId",resumeId);
+      const analysisRes=await axios.post(`http://localhost:5000/analysis-api/run/${resumeId}`,{},{withCredentials:true});
+      localStorage.setItem("analysis",JSON.stringify(analysisRes.data.analysis));
       navigate("/dashboard");
     } 
     catch (err) {

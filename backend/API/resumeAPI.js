@@ -37,8 +37,7 @@ resumeApp.get("/resume/:id",verifyToken,async(req,res)=>{
     if (resume.userId.toString() !== req.user.id) {
       return res.status(403).json({ message: "Unauthorized" });
     }
-    res.redirect(resume.fileUrl);
-
+    res.status(200).json({message:"Resume found",payload:resume})
   } catch (err) {
     res.status(500).json({ message: "Error displaying resume" });
   }

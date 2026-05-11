@@ -1,0 +1,27 @@
+.docx-wrapper{
+  width:100%;
+  background:white !important;
+}
+
+.docx-wrapper .docx{
+  background:white !important;
+  width:100% !important;
+  max-width:100% !important;
+  padding:0 !important;
+  margin:0 !important;
+}
+
+.docx-wrapper .docx section{
+  background:white !important;
+  width:100% !important;
+  max-width:1200px !important;
+  min-width:100% !important;
+  padding:50px !important;
+  margin:0 auto !important;
+  box-shadow:none !important;
+}
+
+.docx-wrapper *{
+  box-sizing:border-box;
+  max-width:100% !important;
+}

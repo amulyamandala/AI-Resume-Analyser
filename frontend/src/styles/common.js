@@ -88,18 +88,16 @@ export const heroContent ="relative z-10 max-w-5xl mx-auto text-center";
 // =========================DASHBOARD =========================
 
 export const dashboardGrid ="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6";
-export const resumeCard ="bg-white rounded-xl border border-[#f0f0f3] p-6 hover:shadow-sm transition";
-export const scoreText = "text-3xl font-semibold text-[#171717]";
-export const scoreSuccess =  "text-[#16a34a] font-medium";
-export const scoreWarning ="text-[#ab6400] font-medium";
-
-
+export const resumeCard ="bg-white rounded-2xl border border-[#e5e5e5] p-6 shadow-sm hover:shadow-md transition duration-300";
+export const scoreText ="text-5xl font-semibold tracking-[-1px] text-[#171717]";
+export const scoreSuccess ="text-[#171717] text-sm font-medium mt-2";
+export const scoreWarning ="text-[#60646c] text-sm font-medium mt-2";
+export const scoreText1 = "text-3xl font-semibold text-[#171717]";
 // =========================ANALYSIS =========================
 
-export const keywordMatched = "px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm";
-export const keywordMissing ="px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm";
-export const suggestionBox ="rounded-xl border border-[#f0f0f3] bg-[#fafafa] p-5";
-
+export const keywordMissing ="px-4 py-2 rounded-full bg-black text-white text-sm font-medium tracking-[0.2px]";
+export const keywordMatched ="px-4 py-2 rounded-full bg-[#f5f5f5] border border-[#e5e5e5] text-[#60646c] text-sm font-medium tracking-[0.2px]";
+export const suggestionBox ="rounded-2xl border border-[#e5e5e5] bg-[#fafafa] p-6 shadow-sm";
 
 // =========================FOOTER =========================
 
