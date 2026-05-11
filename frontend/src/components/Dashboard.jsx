@@ -33,6 +33,7 @@ function Dashboard() {
   const [analysis,setAnalysis]=useState(null);
   const [loading,setLoading]=useState(false);
   const [error,setError]=useState(null);
+  const [numPages,setNumPages]=useState(0);
   //fetch resumes
   const fetchResumes=async()=>{
     try{
@@ -130,7 +131,7 @@ useEffect(()=>{
           )
         }
         {/* MAIN DASHBOARD */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
           {/* LEFT SIDE - RESUME */}
           {
             resumes.map((resume)=>(
@@ -140,11 +141,22 @@ useEffect(()=>{
                 {/* RESUME PREVIEW */}
                <div className="w-full h-[900px] rounded-xl overflow-hidden border border-[#e5e5e5] bg-[#fafafa]">
                 {resume.fileType==="application/pdf"?(
-                  <div className="h-full overflow-y-auto p-4">
-                   <Document file={resume.fileUrl}>
-                   <Page pageNumber={1} width={700}/>
-                   </Document>
-                  </div>
+                <div className="w-full h-[900px] overflow-y-auto rounded-xl border border-[#e5e5e5] bg-[#f5f5f5] p-6 flex justify-center">
+                <Document
+                file={resume.fileUrl} onLoadSuccess={({numPages})=>setNumPages(numPages)}>
+                {
+                 Array.from(new Array(numPages),(el,index)=>(
+                 <div key={`page_${index + 1}`} className="mb-8 flex justify-center">
+                  <Page pageNumber={index + 1}
+                  width={600}
+                  renderTextLayer={false}
+                  renderAnnotationLayer={false}/>
+              </div>
+               )
+              )
+          }
+          </Document>
+          </div>
                   )
                   :resume.fileType==="application/vnd.openxmlformats-officedocument.wordprocessingml.document"?(
                     <div className="w-full max-w-full h-[900px] overflow-auto rounded-xl border border-[#e5e5e5] bg-[#f5f5f5]">

@@ -55,7 +55,7 @@ analysisApp.post("/run/:resumeId",verifyToken,async(req,res)=>{
         const readabilityScore = text.split(" ").length>300?85:65
         const suggestions=[]
         if(keywordsMissing.length>0){
-            suggestions.push("Add missing skills"+ keywordsMissing.join(","))
+            suggestions.push("Add missing skills "+ keywordsMissing.join(","))
         }
         if(!section.projects){
             suggestions.push("Add projects")

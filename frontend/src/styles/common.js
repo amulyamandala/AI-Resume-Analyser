@@ -27,7 +27,7 @@ export const colors = {
 // =========================LAYOUT=========================
 export const pageWrapper = "min-h-screen bg-white text-[#171717]";
 export const sectionWrapper ="w-full px-6 md:px-12 lg:px-20 py-24";
-export const container = "max-w-7xl mx-auto";
+export const container ="max-w-[1800px] mx-auto px-8";
 export const centeredFlex = "flex items-center justify-center";
 export const flexBetween ="flex items-center justify-between";
 
