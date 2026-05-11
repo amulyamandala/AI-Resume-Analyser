@@ -7,6 +7,7 @@ import mammoth from "mammoth";
 import natural from "natural";
 import { removeStopwords } from "stopword";
 import { createRequire } from "module";
+import { calculateAtsScore } from "../utils/scoringUtils.js";
 
 const require=createRequire(import.meta.url);
 const pdfParse=require("pdf-parse");
@@ -69,32 +70,8 @@ jobMatchApp.post("/run/:resumeId",verifyToken,async(req,res)=>{
 
       // TECH KEYWORDS
 
-      const techKeywords= [
-        "javascript","typescript","react","next.js",
-        "node.js", "express", "mongodb", "mysql","postgresql","redis", "docker", "kubernetes","aws", 
-        "firebase", "git","github", "rest api","graphql","jwt","tailwind css","machine learning",
-        "data structures","algorithms","python","java","c++","c","html","css","problem solving","communication",
-      ];
-
-      // CLEAN JOB DESCRIPTION
-      const tokenizer=new natural.WordTokenizer();
-      const jdTokens=tokenizer.tokenize(jobDescription.toLowerCase());
-
-      const cleanJDTokens=removeStopwords(jdTokens);
-
-      const cleanJD=cleanJDTokens.join(" ");
-
-      // FIND KEYWORDS IN JD
-      const jdKeywords=techKeywords.filter((skill)=>cleanJD.includes(skill.toLowerCase()));
-
-      // MATCHED KEYWORDS
-      const matchedKeywords=jdKeywords.filter((skill)=>resumeText.includes(skill.toLowerCase()));
-
-      // MISSING KEYWORDS
-      const missingKeywords=jdKeywords.filter((skill)=>!matchedKeywords.includes(skill));
-
-      // MATCH SCORE
-      const matchScore=jdKeywords.length>0?Math.round((matchedKeywords.length/jdKeywords.length)*100):0;
+      // UNIFIED SCORING
+      const { score: matchScore, matched: matchedKeywords, missing: missingKeywords } = calculateAtsScore(resumeText, jobDescription);
 
       // ADDITIONAL METRICS (Formatting & Readability)
       const section = {

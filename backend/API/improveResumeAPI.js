@@ -2,6 +2,7 @@ import exp from "express";
 import axios from "axios";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { ResumeHistoryModel } from "../model/resumeHistoryModel.js";
+import { calculateAtsScore, techKeywords } from "../utils/scoringUtils.js";
 
 export const improveResumeApp = exp.Router();
 
@@ -75,32 +76,26 @@ try{
       }
 
       // AI RESPONSE
-      const improvedResume =response?.data?.choices?.[0]?.message
-          ?.content;
-          // ATS SCORING LOGIC
-const keywords = ["javascript","typescript","react","next.js","node.js","express","mongodb","mysql",
-  "postgresql","redis","docker","kubernetes","aws","firebase","git","github",
-  "rest api","graphql","jwt","tailwind css","machine learning","data structures",
-  "algorithms","python","java","c++","c","html","css","problem solving","communication",
-];
-// EXTRACT JD KEYWORDS
-const tokenizer=new axios.default.create().tokenizer||{tokenize:(t)=>t.toLowerCase().split(/\W+/) }; // Fallback tokenizer
-const jdKeywords=keywords.filter((skill)=>jobDescription.toLowerCase().includes(skill.toLowerCase()));
-// ORIGINAL SCORE (Based on JD)
-const originalMatched=jdKeywords.filter((skill)=>resumeText.toLowerCase().includes(skill.toLowerCase()));
+      const improvedResume = response?.data?.choices?.[0]?.message?.content;
 
-const oldScore=jdKeywords.length>0?Math.round((originalMatched.length/jdKeywords.length)*100):0;
-
-// IMPROVED SCORE (Based on JD)
-const improvedMatched=jdKeywords.filter((skill)=>
-  improvedResume.toLowerCase().includes(skill.toLowerCase())
-);
-
-const newScore=jdKeywords.length>0?Math.round((improvedMatched.length/jdKeywords.length)*100):0;
-
-      if(!improvedResume){
-        return res.status(500).json({message:"No response from AI"});
+      if (!improvedResume) {
+        return res.status(500).json({ message: "No response from AI" });
       }
+
+      console.log("--- SCORING DIAGNOSTICS ---");
+      console.log("Resume Text Length:", resumeText?.length);
+      console.log("JD Length:", jobDescription?.length);
+
+      // UNIFIED SCORING (Old Resume)
+      const oldScoreResult = calculateAtsScore(resumeText, jobDescription);
+      const oldScore = oldScoreResult.score;
+      console.log("Old Score:", oldScore, "Matched:", oldScoreResult.matched.length, "JD Keywords:", oldScoreResult.jdKeywords?.length);
+
+      // UNIFIED SCORING (Improved Resume)
+      const newScoreResult = calculateAtsScore(improvedResume, jobDescription);
+      const newScore = newScoreResult.score;
+      console.log("New Score:", newScore);
+      console.log("---------------------------");
 
 const history=await ResumeHistoryModel.create({
   userId:req.user.id,
