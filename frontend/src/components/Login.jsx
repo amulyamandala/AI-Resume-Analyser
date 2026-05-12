@@ -17,7 +17,7 @@ import { useEffect } from "react";
 import {toast} from 'react-hot-toast'
 
 function Login() {
-      const {register,handleSubmit,formState: { errors }} = useForm();
+      const {register,handleSubmit,formState:{errors}}=useForm();
       const navigate=useNavigate()
       const {login,currentUser,loading,error,isAuthenticated}=useAuthStore((state)=>state)
       const onUserLogin=(userCredObj)=>{

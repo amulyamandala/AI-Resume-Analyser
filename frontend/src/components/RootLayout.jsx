@@ -4,17 +4,12 @@ import { Outlet } from "react-router";
 import {useEffect} from 'react'
 import { useAuthStore } from "../store/authStore";
 
-
-
 function RootLayout() {
-
   //import check checkAuth
   let checkAuth=useAuthStore(state=>state.checkAuth)
-
   useEffect(()=>{
     checkAuth()
   },[])
-
 
   return (
     <div>

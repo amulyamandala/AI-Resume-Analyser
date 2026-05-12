@@ -50,54 +50,34 @@ function Home() {
       // Save JD to localStorage for the improvement feature
       if (jobDescription.trim()) {
         localStorage.setItem("jobDescription", jobDescription);
-      } else {
+        } 
+      else {
         localStorage.removeItem("jobDescription");
       }
-
-      const res=await axios.post( "http://localhost:5000/resume-api/upload",formData,
-        {
-          withCredentials: true,
-        }
-      );
-      const resumeId = res.data.resume._id;
+      const res=await axios.post("http://localhost:5000/resume-api/upload",formData,{withCredentials: true,});
+      const resumeId=res.data.resume._id;
       localStorage.setItem("resumeId", resumeId);
-
       let analysisRes;
-      if (jobDescription.trim()) {
+      if(jobDescription.trim()){
         // If JD is provided, run Job Match Analysis
-        analysisRes = await axios.post(
-          `http://localhost:5000/job-match-api/run/${resumeId}`,
-          { jobDescription },
-          { withCredentials: true }
-        );
-      } else {
+        analysisRes = await axios.post(`http://localhost:5000/job-match-api/run/${resumeId}`,{jobDescription},{withCredentials:true});
+      } 
+      else{
         // Fallback to standard ATS Analysis
-        analysisRes = await axios.post(
-          `http://localhost:5000/analysis-api/run/${resumeId}`,
-          {},
-          { withCredentials: true }
-        );
+        analysisRes=await axios.post(`http://localhost:5000/analysis-api/run/${resumeId}`,{},{withCredentials:true});
       }
-
-      localStorage.setItem(
-        "analysis",
-        JSON.stringify(analysisRes.data.analysis ? { ...analysisRes.data.analysis, resumeText: analysisRes.data.resumeText } : analysisRes.data)
-      );
-      
-      const savedAnalysis = analysisRes.data.analysis || analysisRes.data;
-      if (savedAnalysis && savedAnalysis._id) {
-        localStorage.setItem("analysisId", savedAnalysis._id);
-      }
-      
+      localStorage.setItem("analysis",JSON.stringify(analysisRes.data.analysis?{...analysisRes.data.analysis,resumeText:analysisRes.data.resumeText}:analysisRes.data));
+      const savedAnalysis=analysisRes.data.analysis||analysisRes.data;
+      if (savedAnalysis && savedAnalysis._id){
+        localStorage.setItem("analysisId",savedAnalysis._id);
+      }      
       navigate("/dashboard");
     } 
-    catch (err) {
+    catch(err){
       console.log(err);
-      setError(
-        err.response?.data?.message ||
-        "Resume upload failed"
-      );
-    } finally {
+      setError(err.response?.data?.message||"Resume upload failed");
+    } 
+    finally{
       setLoading(false);
     }
   };
@@ -200,48 +180,61 @@ function Home() {
               <h3 className={cardTitle}>
                 ATS Score Analysis
               </h3>
-
               <p className={`${mutedText} mt-3`}>
                 Get instant ATS score evaluation based on
                 keywords, formatting, and resume readability.
               </p>
-
             </div>
-
             {/* CARD 2 */}
             <div className={featureCard}>
-
               <h3 className={cardTitle}>
                 Keyword Matching
               </h3>
-
               <p className={`${mutedText} mt-3`}>
                 Discover missing keywords and improve
                 resume visibility for recruiters.
               </p>
-
             </div>
-
             {/* CARD 3 */}
             <div className={featureCard}>
-
               <h3 className={cardTitle}>
                 AI Suggestions
               </h3>
-
               <p className={`${mutedText} mt-3`}>
                 Receive personalized recommendations to
                 strengthen projects, skills, and experience.
               </p>
-
             </div>
-
+            {/* STUDY PLAN CARD */}
+            <div className={featureCard}>
+            <h3 className={cardTitle}>AI Study Plan</h3>
+            <p className={`${mutedText} mt-3`}>
+              Generate personalized learning roadmaps
+              based on missing skills, ATS gaps and
+              career goals to improve job readiness.
+              </p>
+              </div>
+              {/* OPTIMIZED RESUME CARD */}
+              <div className={featureCard}>
+                <h3 className={cardTitle}>Optimized Resume</h3>
+                <p className={`${mutedText} mt-3`}>
+                  Improve ATS compatibility, readability,
+                  formatting and resume quality using
+                  AI-powered optimization suggestions.
+                  </p>
+                  </div>
+                  {/* JOB DESCRIPTION TAILORING CARD */}
+                  <div className={featureCard}>
+                    <h3 className={cardTitle}>Job Description Tailoring</h3>
+                    <p className={`${mutedText} mt-3`}>
+                      Customize resumes for specific job roles
+                      using AI keyword matching and recruiter
+                      focused optimization techniques.
+                      </p>
+                      </div>
           </div>
-
         </div>
-
       </section>
-
     </div>
   );
 }

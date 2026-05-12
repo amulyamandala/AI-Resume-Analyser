@@ -14,31 +14,24 @@ import {
   tertiaryBtn,
   smallText,
 } from "../styles/common.js";
-
 function Register() {
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-
-  const [loading, setLoading] = useState(false);
-  const [apiError, setApiError] = useState(null);
-  const navigate = useNavigate();
+  const {register,handleSubmit,formState: { errors }}=useForm();
+  const [loading,setLoading]=useState(false);
+  const [apiError,setApiError]=useState(null);
+  const navigate=useNavigate();
   //When user registration submitted
- const onUserRegister = async (userObj) => {
+ const onUserRegister=async(userObj)=>{
     console.log(userObj);
-    try {
+    try{
       setLoading(true);
-      let res = await axios.post("http://localhost:5000/user-api/register", userObj);
-
-      if (res.status === 201) {
+      let res=await axios.post("http://localhost:5000/user-api/register",userObj);
+      if (res.status===201) {
         navigate("/login");
       }
-    } catch (err) {
-      setApiError(err.response?.data?.message || err.message || "Registration Failed"); 
-       } finally {
+    } catch(err){
+      setApiError(err.response?.data?.message||err.message||"Registration Failed"); 
+       } 
+       finally{
       setLoading(false);
     }
   };
