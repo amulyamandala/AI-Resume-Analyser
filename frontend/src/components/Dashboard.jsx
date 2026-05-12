@@ -88,68 +88,55 @@ function Dashboard() {
   const handleGenerateStudyPlan=async()=>{
     try{
       setGeneratingPlan(true);
-      const storedId = localStorage.getItem("analysisId");
-      
+      const storedId=localStorage.getItem("analysisId");
       // Look for ID in all possible shapes of the analysis object
-      const targetId = 
-        analysis?.analysisId || 
-        analysis?._id || 
-        analysis?.analysis?._id || 
-        (storedId !== "undefined" ? storedId : null);
-      
+      const targetId= 
+        analysis?.analysisId|| 
+        analysis?._id|| 
+        analysis?.analysis?._id||(storedId!=="undefined"?storedId:null);
       console.log("Full Analysis State:", analysis);
       console.log("Determined Target ID:", targetId);
-
-      if(!targetId || targetId === "undefined"){
+      if(!targetId||targetId==="undefined"){
         setError("No analysis found. Please re-analyze your resume.");
         setGeneratingPlan(false);
         return;
       }
-      const res=await axios.post(
-        `http://localhost:5000/studyplan-api/generate/${targetId}`,
-        {},
-        { withCredentials: true }
-      );
+      const res=await axios.post(`http://localhost:5000/studyplan-api/generate/${targetId}`,{},{withCredentials:true});
       localStorage.setItem("analysisId", targetId);
       navigate("/study-plan");
-    }catch(err){
+    }
+    catch(err){
       console.log(err);
-      setError(err.response?.data?.message || "Failed to generate study plan");
-    }finally{
+      setError(err.response?.data?.message||"Failed to generate study plan");
+    }
+    finally{
       setGeneratingPlan(false);
     }
   };
 
   // improve resume
-  const handleImproveResume = async () => {
+  const handleImproveResume=async()=>{
     try {
       setImproving(true);
       setError(null);
-
-      const payload = {
-        resumeText: analysis.resumeText,
-        jobDescription: localStorage.getItem("jobDescription") || "Software Engineer Role",
-        missingKeywords: analysis.keywordsMissing || analysis.missingKeywords || [],
+      const payload={
+        resumeText:analysis.resumeText,
+        jobDescription:localStorage.getItem("jobDescription")||"Software Engineer Role",
+        missingKeywords:analysis.keywordsMissing||analysis.missingKeywords||[],
       };
-
       console.log("Improvement Payload:", payload);
-
-      const res = await axios.post(
-        "http://localhost:5000/improve-resume-api/generate",
-        payload,
-        { withCredentials: true }
-      );
-
+      const res = await axios.post("http://localhost:5000/improve-resume-api/generate",payload,{withCredentials:true});
       setImprovedData(res.data);
       // Scroll to the improved section
-      setTimeout(() => {
+      setTimeout(()=>{
         document.getElementById("improved-section")?.scrollIntoView({ behavior: "smooth" });
-      }, 500);
-
-    } catch (err) {
+      },500);
+    } 
+    catch(err){
       console.log(err);
-      setError(err.response?.data?.message || "Failed to improve resume");
-    } finally {
+      setError(err.response?.data?.message||"Failed to improve resume");
+    } 
+    finally{
       setImproving(false);
     }
   };
@@ -356,11 +343,9 @@ useEffect(()=>{
                 <button
                   onClick={handleGenerateStudyPlan}
                   disabled={generatingPlan}
-                  className={`${primaryBtn} w-full ${generatingPlan ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
+                  className={`${primaryBtn} w-full ${generatingPlan ? 'opacity-50 cursor-not-allowed' : ''}`}>
                   {generatingPlan ? 'Generating Study Plan...' : 'Generate Study Plan'}
                 </button>
-            
               </div>
             )
           }
@@ -389,7 +374,6 @@ useEffect(()=>{
                 <p className="text-sm font-medium text-green-600 mt-1">+{improvedData.scoreImprovement}% Improvement</p>
               </div>
             </div>
-
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* ORIGINAL TEXT */}
               <div className={featureCard}>
@@ -410,9 +394,8 @@ useEffect(()=>{
 
             <div className="mt-10 flex justify-center gap-4">
               <button 
-                onClick={() => {
-                  setImprovedData(null);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                onClick={()=>{setImprovedData(null);
+                  window.scrollTo({top:0,behavior:'smooth'});
                 }}
                 className={secondaryBtn}
               >
@@ -420,13 +403,12 @@ useEffect(()=>{
               </button>
               <button 
                 className={primaryBtn}
-                onClick={async () => {
-                  try {
-                    const res = await axios.post("http://localhost:5000/pdf-api/generate", {
-                      improvedResume: improvedData.improvedResume
-                    }, { withCredentials: true });
-                    window.open(`http://localhost:5000${res.data.downloadUrl}`, "_blank");
-                  } catch (err) {
+                onClick={async()=>{
+                  try{
+                    const res = await axios.post("http://localhost:5000/pdf-api/generate",{improvedResume: improvedData.improvedResume},{withCredentials:true});
+                    window.open(`http://localhost:5000${res.data.downloadUrl}`,"_blank");
+                  } 
+                  catch(err){
                     setError("PDF generation failed");
                   }
                 }}

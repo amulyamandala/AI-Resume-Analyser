@@ -18,13 +18,11 @@ function StudyPlan() {
   const [loading,setLoading]=useState(false);
   const [error,setError]=useState(null);
   const [generating,setGenerating]=useState(false);
-
   const generateStudyPlan=async()=>{
     try{
       setGenerating(true);
       setError(null);
       let analysisId=localStorage.getItem("analysisId");
-      
       // If analysisId not found, try to get it from the stored analysis object
       if(!analysisId){
         const storedAnalysis=localStorage.getItem("analysis");
@@ -37,45 +35,36 @@ function StudyPlan() {
           }
         }
       }
-      
       if(!analysisId){
         setError("No analysis found. Please run an analysis first.");
         return;
       }
-      const res=await axios.post(
-        `http://localhost:5000/studyplan-api/generate/${analysisId}`,
-        {},
-        { withCredentials: true }
-      );
+      const res=await axios.post(`http://localhost:5000/studyplan-api/generate/${analysisId}`,{},{withCredentials:true});
       setStudyPlan(res.data.payload);
-    }catch(err){
+    }
+    catch(err){
       console.log(err);
-      setError(err.response?.data?.message || "Failed to generate study plan");
-    }finally{
+      setError(err.response?.data?.message||"Failed to generate study plan");
+    }
+    finally{
       setGenerating(false);
     }
   };
-
-  const handleDownloadRoadmap = async () => {
+  const handleDownloadRoadmap=async()=>{
     try {
-      const res = await axios.post(
-        "http://localhost:5000/pdf-api/generate-roadmap",
-        { studyPlan },
-        { withCredentials: true }
-      );
-      window.open(`http://localhost:5000${res.data.downloadUrl}`, "_blank");
-    } catch (err) {
+      const res=await axios.post("http://localhost:5000/pdf-api/generate-roadmap",{studyPlan},{withCredentials:true});
+      window.open(`http://localhost:5000${res.data.downloadUrl}`,"_blank");
+    } 
+    catch(err){
       console.log(err);
       setError("Failed to download roadmap PDF");
     }
   };
-
   useEffect(()=>{
     const fetchStudyPlan=async()=>{
       try {
         setLoading(true);
-        let analysisId=localStorage.getItem("analysisId");
-        
+        let analysisId=localStorage.getItem("analysisId");       
         // If analysisId not found, try to get it from the stored analysis object
         if(!analysisId){
           const storedAnalysis=localStorage.getItem("analysis");
@@ -87,25 +76,22 @@ function StudyPlan() {
               console.log("Failed to parse stored analysis");
             }
           }
-        }
-        
+        }       
         if(!analysisId){
           setError("No analysis found. Please run an analysis first.");
           return;
         }
-        const res=await axios.get(
-          `http://localhost:5000/studyplan-api/${analysisId}`,
-          { withCredentials: true }
-        );
+        const res=await axios.get(`http://localhost:5000/studyplan-api/${analysisId}`,{withCredentials:true});
         setStudyPlan(res.data.payload);
-      }catch(err){
+      }
+      catch(err){
         console.log(err);
         setError(err.response?.data?.message || "Failed to fetch study plan");
-      }finally{
+      }
+      finally{
         setLoading(false);
       }
     };
-
     fetchStudyPlan();
   },[]);
 

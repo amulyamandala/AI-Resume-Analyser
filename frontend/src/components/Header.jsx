@@ -10,9 +10,9 @@ import {
   activeNavLink,
 } from "../styles/common";
 function Header() {
-  const navigate = useNavigate()
-  const { isAuthenticated, logout } = useAuthStore()
-  const handleLogout = async () => {
+  const navigate=useNavigate()
+  const {isAuthenticated,logout}=useAuthStore()
+  const handleLogout=async()=>{
     await logout()
     navigate("/")
   }

@@ -3,21 +3,15 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../store/authStore";
 
-function ProtectedRoute({ children }) {
-  const {
-    loading,
-    isAuthenticated,
-  } = useAuthStore();
-
+function ProtectedRoute({children}){
+  const {loading,isAuthenticated}=useAuthStore();
   // Show toast only once
-  useEffect(() => {
-    if (!loading && !isAuthenticated) {
+  useEffect(()=>{
+    if (!loading&&!isAuthenticated){
       toast.error("Please login first", {
-        id: "auth-error",
-      });
+        id:"auth-error"});
     }
-  }, [loading, isAuthenticated]);
-
+  },[loading,isAuthenticated]);
   // Loading state
   if (loading) {
     return (
@@ -33,7 +27,6 @@ function ProtectedRoute({ children }) {
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-
   return children;
 }
 
