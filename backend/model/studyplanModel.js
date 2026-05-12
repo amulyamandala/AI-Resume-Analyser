@@ -1,13 +1,13 @@
 import { Schema,model,Types } from "mongoose";
 const studyPlanSchema = new Schema(
   {
-    userId: {
+    userId:{
       type: Types.ObjectId,
       ref: "user",
       required: true,
     },
 
-    analysisId: {
+    analysisId:{
       type: Types.ObjectId,
       ref: "analysis",
       required: true,
@@ -15,17 +15,15 @@ const studyPlanSchema = new Schema(
 
     weakTopics: [String],
 
-    generatedBy: {
+    generatedBy:{
       type: String,
       default: "groq_api_key",
     },
 
-    roadmap: [
+    roadmap:[
       {
         week: Number,
-
         title: String,
-
         tasks: [String],
       },
     ],

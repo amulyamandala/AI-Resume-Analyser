@@ -1,37 +1,36 @@
 import { Schema, model, Types } from "mongoose";
-
 const resumeHistorySchema = new Schema(
   {
-    userId: {
+    userId:{
       type: Types.ObjectId,
       ref: "user",
       required: true,
     },
 
-    originalResumeUrl: {
+    originalResumeUrl:{
       type: String,
     },
 
-    improvedResumeUrl: {
+    improvedResumeUrl:{
       type: String,
     },
 
-    originalResumeText: {
-      type: String,
-      required: true,
-    },
-
-    improvedResumeText: {
+    originalResumeText:{
       type: String,
       required: true,
     },
 
-    oldScore: {
+    improvedResumeText:{
+      type: String,
+      required: true,
+    },
+
+    oldScore:{
       type: Number,
       required: true,
     },
 
-    newScore: {
+    newScore:{
       type: Number,
       required: true,
     },

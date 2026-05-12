@@ -5,7 +5,7 @@ import {StudyPlan} from "../model/studyplanModel.js";
 import {verifyToken} from "../middleware/verifyToken.js";
 export const studyPlanApp = exp.Router();
 studyPlanApp.post("/generate/:analysisId",verifyToken,async(req,res)=>{
-    try {
+    try{
       const {analysisId}=req.params;
       // find analysis
       const analysis=await AnalysisModel.findById(analysisId);
@@ -14,7 +14,7 @@ studyPlanApp.post("/generate/:analysisId",verifyToken,async(req,res)=>{
       }
       // ownership check
       if(analysis.userId.toString()!==req.user.id) {
-        return res.status(403).json({message: "Unauthorized"});
+        return res.status(403).json({message:"Unauthorized"});
       }
       // existing plan check
       const existingPlan=await StudyPlan.findOne({analysisId});
@@ -60,7 +60,7 @@ studyPlanApp.post("/generate/:analysisId",verifyToken,async(req,res)=>{
            response_format: {type:"json_object"}
           },
           {
-            headers: {
+            headers:{
               "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
               "Content-Type": "application/json"
             }
@@ -94,14 +94,14 @@ studyPlanApp.post("/generate/:analysisId",verifyToken,async(req,res)=>{
       }
       
       // Filter roadmap to only include expected schema fields
-      const cleanedRoadmap = parsedData.roadmap.map((week, index) => ({
+      const cleanedRoadmap=parsedData.roadmap.map((week, index) => ({
        week:
-        typeof week.week === "number"
+        typeof week.week==="number"
           ? week.week
           : index + 1,
 
        title:
-        typeof week.title === "string"
+        typeof week.title==="string"
       ? week.title
       : "Untitled Week",
 
@@ -125,13 +125,13 @@ studyPlanApp.post("/generate/:analysisId",verifyToken,async(req,res)=>{
   }
 );
 studyPlanApp.get("/:analysisId",verifyToken,async(req,res)=>{
-    try {
+    try{
       const {analysisId}=req.params;
       const studyPlan=await StudyPlan.findOne({analysisId});
       if(!studyPlan){
         return res.status(404).json({message:"Study plan not found"});
       }
-      if (studyPlan.userId.toString()!==req.user.id) {
+      if(studyPlan.userId.toString()!==req.user.id) {
         return res.status(403).json({message:"Unauthorized"});
       }
       res.status(200).json({payload: studyPlan});

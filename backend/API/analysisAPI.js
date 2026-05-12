@@ -22,13 +22,13 @@ analysisApp.post("/run/:resumeId",verifyToken,async(req,res)=>{
         if(resume.userId.toString()!==req.user.id){
             return res.status(403).json({message:"Unauthorized"})
         }
-        const response = await fetch(resume.fileUrl)
+        const response=await fetch(resume.fileUrl)
         if(!response.ok){
            return res.status(400).json({message:"File failed download"})
         }
         const arrayBuffer=await response.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer)
-        let text = "";
+        const buffer=Buffer.from(arrayBuffer)
+        let text="";
         if(resume.fileType==="application/pdf"){
           const parsed=await pdfParse(buffer);
           text=parsed.text.toLowerCase();
@@ -42,17 +42,17 @@ analysisApp.post("/run/:resumeId",verifyToken,async(req,res)=>{
       }
 
         const keywords=["javascript","node","web development","python","data structures","machine learning","react","mongodb","java","c","agentic ai","soft skills","communication"]
-        const keywordsMatched = keywords.filter(k => text.includes(k));
-        const keywordsMissing = keywords.filter(k => !text.includes(k));
+        const keywordsMatched=keywords.filter(k=>text.includes(k));
+        const keywordsMissing=keywords.filter(k=>!text.includes(k));
         const atsScore=Math.round((keywordsMatched.length/keywords.length)*100)
-        const section = {
-        education: text.includes("education"),
-        skills: text.includes("skills"),
-        experience: text.includes("experience"),
-        certifications: text.includes("certifications"),
-        projects: text.includes("projects")};
+        const section={
+        education:text.includes("education"),
+        skills:text.includes("skills"),
+        experience:text.includes("experience"),
+        certifications:text.includes("certifications"),
+        projects:text.includes("projects")};
         const formatScore=text.length>1000?80:60
-        const readabilityScore = text.split(" ").length>300?85:65
+        const readabilityScore=text.split(" ").length>300?85:65
         const suggestions=[]
         if(keywordsMissing.length>0){
             suggestions.push("Add missing skills "+ keywordsMissing.join(","))
@@ -63,7 +63,7 @@ analysisApp.post("/run/:resumeId",verifyToken,async(req,res)=>{
         if (!section.experience) {
             suggestions.push("Add experience details")
         }
-        const analysis = new AnalysisModel({
+        const analysis=new AnalysisModel({
         userId:req.user.id,
         resumeId,
         atsScore,
@@ -74,7 +74,7 @@ analysisApp.post("/run/:resumeId",verifyToken,async(req,res)=>{
         formatScore,
         readabilityScore})
         await analysis.save()
-        res.status(201).json({message:"Analysis completed successfully",analysis, resumeText: text})
+        res.status(201).json({message:"Analysis completed successfully",analysis,resumeText:text})
      }
         catch(err){
         console.log(err);

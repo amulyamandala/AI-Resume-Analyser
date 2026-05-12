@@ -12,7 +12,7 @@ resumeApp.post("/upload",verifyToken,upload.single("resume"),async(req,res)=>{
     if(!req.file){
         return res.status(400).json({message:"No file uploaded"})
     }
-    const result= await uploadToCloudinary(req.file.buffer)
+    const result=await uploadToCloudinary(req.file.buffer)
     const newResume=new ResumeModel({
       userId:req.user.id,
       fileUrl:result.secure_url,
@@ -22,9 +22,9 @@ resumeApp.post("/upload",verifyToken,upload.single("resume"),async(req,res)=>{
       await newResume.save()
       res.status(201).json({message:"Resume uploaded",resume:newResume})
     }
-     catch (err) {
+     catch(err){
       console.log(err);
-      res.status(500).json({ message: "Upload failed" });
+      res.status(500).json({message: "Upload failed"});
     }
 })
 //display the users resume in the page 
@@ -32,14 +32,14 @@ resumeApp.get("/resume/:id",verifyToken,async(req,res)=>{
     try{
         const resume=await ResumeModel.findById(req.params.id)
         if(!resume){
-            return res.status(404).json({ message: "Resume not found" });
+            return res.status(404).json({message: "Resume not found"});
     }
-    if (resume.userId.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Unauthorized" });
+    if(resume.userId.toString()!==req.user.id) {
+      return res.status(403).json({message:"Unauthorized"});
     }
     res.status(200).json({message:"Resume found",payload:resume})
   } catch (err) {
-    res.status(500).json({ message: "Error displaying resume" });
+    res.status(500).json({message:"Error displaying resume"});
   }
 });
 // GET ALL USER RESUMES
@@ -56,18 +56,18 @@ resumeApp.get("/my-resumes",verifyToken,async(req,res)=>{
 });
 //delete the resume
 resumeApp.delete("/:id",verifyToken,async(req,res)=>{
-    try {
+    try{
     const resume = await ResumeModel.findById(req.params.id);
-    if (!resume) {
-      return res.status(404).json({ message: "Resume not found" });
+    if (!resume){
+      return res.status(404).json({message: "Resume not found"});
     }
-    if (resume.userId.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Unauthorized" });
+    if(resume.userId.toString()!==req.user.id) {
+      return res.status(403).json({message:"Unauthorized"});
     }
     await ResumeModel.findByIdAndDelete(req.params.id)
     res.status(200).json({message:"resume deleted"})
 }
 catch(err){
-res.status(500).json({ message: "Error deleting resume" });
+res.status(500).json({message:"Error deleting resume"});
 }});
 

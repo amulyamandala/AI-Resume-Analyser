@@ -17,64 +17,54 @@ export const jobMatchApp=exp.Router();
 // JOB MATCH API
 
 jobMatchApp.post("/run/:resumeId",verifyToken,async(req,res)=>{
-    try {
+    try{
       const {resumeId}=req.params;
       const{jobDescription}=req.body;
 
       if(!jobDescription){
-        return res.status(400).json({ message: "Job description is required" });
+        return res.status(400).json({message: "Job description is required"});
       }
 
       // FIND RESUME
       const resume=await ResumeModel.findById(resumeId);
-
       if(!resume){
-        return res.status(404).json({ message: "Resume not found" });
+        return res.status(404).json({message:"Resume not found"});
       }
-
-      if(resume.userId.toString() !== req.user.id){
-        return res.status(403).json({ message: "Unauthorized" });
+      if(resume.userId.toString()!==req.user.id){
+        return res.status(403).json({message:"Unauthorized"});
       }
 
       // DOWNLOAD FILE
 
       const response=await fetch(resume.fileUrl);
-
       if(!response.ok){
-        return res.status(400).json({ message: "File download failed" });
+        return res.status(400).json({message:"File download failed"});
       }
-
       const arrayBuffer=await response.arrayBuffer();
-
       const buffer=Buffer.from(arrayBuffer);
-
-      let resumeText= "";
+      let resumeText="";
 
       // EXTRACT TEXT
 
       if (resume.fileType==="application/pdf") {
         const parsed=await pdfParse(buffer);
         resumeText=parsed.text.toLowerCase();
-      } else if (
-        resume.fileType===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      ) {
-        const result = await mammoth.extractRawText({
+      } else if (resume.fileType==="application/vnd.openxmlformats-officedocument.wordprocessingml.document") 
+        {
+        const result=await mammoth.extractRawText({
           buffer,
         });
-
         resumeText=result.value.toLowerCase();
       } else {
         return res.status(400).json({message:"Unsupported file type"});
       }
 
       // TECH KEYWORDS
-
       // UNIFIED SCORING
-      const { score: matchScore, matched: matchedKeywords, missing: missingKeywords } = calculateAtsScore(resumeText, jobDescription);
+      const {score: matchScore, matched: matchedKeywords, missing: missingKeywords}=calculateAtsScore(resumeText, jobDescription);
 
       // ADDITIONAL METRICS (Formatting & Readability)
-      const section = {
+      const section={
         education: resumeText.includes("education"),
         skills: resumeText.includes("skills"),
         experience: resumeText.includes("experience"),
@@ -88,11 +78,9 @@ jobMatchApp.post("/run/:resumeId",verifyToken,async(req,res)=>{
       // SUGGESTIONS
 
       const suggestions=[];
-
       if (missingKeywords.length>0){
         suggestions.push(`Add these missing skills: ${missingKeywords.join(", ")}`);
       }
-
       if (!section.projects) {
         suggestions.push("Add a dedicated projects section");
       }
@@ -102,35 +90,29 @@ jobMatchApp.post("/run/:resumeId",verifyToken,async(req,res)=>{
       }
 
       if (matchScore < 50) {
-        suggestions.push(
-          "Your resume is weakly aligned with this job description."
-        );
+        suggestions.push("Your resume is weakly aligned with this job description.");
       } else if (matchScore < 80) {
-        suggestions.push(
-          "Your resume partially matches the job description."
-        );
-      } else {
-        suggestions.push(
-          "Your resume is strongly aligned with the job description."
-        );
+        suggestions.push("Your resume partially matches the job description.");
+      } else{
+        suggestions.push("Your resume is strongly aligned with the job description.");
       }
 
       // SAVE TO DATABASE
-      const analysis = await AnalysisModel.create({
-        userId: req.user.id,
-        resumeId: resumeId,
-        atsScore: matchScore,
-        keywordsMatched: matchedKeywords,
-        keywordsMissing: missingKeywords,
-        suggestions: suggestions,
+      const analysis=await AnalysisModel.create({
+        userId:req.user.id,
+        resumeId:resumeId,
+        atsScore:matchScore,
+        keywordsMatched:matchedKeywords,
+        keywordsMissing:missingKeywords,
+        suggestions:suggestions,
         section,
         formatScore,
         readabilityScore,
       });
 
       // RESPONSE
-      res.status(200).json({message: "Job match analysis completed",version: "v2",analysisId: analysis._id,analysis,matchScore,resumeText,matchedKeywords,missingKeywords,suggestions,});
-    } catch (err) {
+      res.status(200).json({message:"Job match analysis completed",version:"v2",analysisId:analysis._id,analysis,matchScore,resumeText,matchedKeywords,missingKeywords,suggestions,});
+    } catch(err){
       console.log(err);
       res.status(500).json({message: "Job match analysis failed",});
     }

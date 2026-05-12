@@ -4,10 +4,9 @@ import { verifyToken } from "../middleware/verifyToken.js";
 import { ResumeHistoryModel } from "../model/resumeHistoryModel.js";
 import { calculateAtsScore, techKeywords } from "../utils/scoringUtils.js";
 
-export const improveResumeApp = exp.Router();
+export const improveResumeApp=exp.Router();
 
 // IMPROVE RESUME API
-
 improveResumeApp.post("/generate",verifyToken,async(req,res)=>{
     try{
       const {resumeText,jobDescription,missingKeywords}=req.body;
@@ -64,22 +63,21 @@ try{
             max_tokens: 3000,
           },
           {
-            headers: {Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+            headers:{Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
 
               "Content-Type":"application/json",
             },
           }
         );
-      } catch (apiErr) {
+      } catch(apiErr){
         console.log("GROQ API Error:",apiErr.response?.data||apiErr.message);
         return res.status(500).json({message:"GROQ API Error: " +(apiErr.response?.data?.error?.message||apiErr.message),});
       }
 
       // AI RESPONSE
-      const improvedResume = response?.data?.choices?.[0]?.message?.content;
-
-      if (!improvedResume) {
-        return res.status(500).json({ message: "No response from AI" });
+      const improvedResume=response?.data?.choices?.[0]?.message?.content;
+      if(!improvedResume){
+        return res.status(500).json({message:"No response from AI"});
       }
 
       console.log("--- SCORING DIAGNOSTICS ---");
@@ -87,13 +85,13 @@ try{
       console.log("JD Length:", jobDescription?.length);
 
       // UNIFIED SCORING (Old Resume)
-      const oldScoreResult = calculateAtsScore(resumeText, jobDescription);
-      const oldScore = oldScoreResult.score;
+      const oldScoreResult=calculateAtsScore(resumeText, jobDescription);
+      const oldScore=oldScoreResult.score;
       console.log("Old Score:", oldScore, "Matched:", oldScoreResult.matched.length, "JD Keywords:", oldScoreResult.jdKeywords?.length);
 
       // UNIFIED SCORING (Improved Resume)
-      const newScoreResult = calculateAtsScore(improvedResume, jobDescription);
-      const newScore = newScoreResult.score;
+      const newScoreResult=calculateAtsScore(improvedResume, jobDescription);
+      const newScore=newScoreResult.score;
       console.log("New Score:", newScore);
       console.log("---------------------------");
 
@@ -109,9 +107,8 @@ const history=await ResumeHistoryModel.create({
 });
       // FINAL RESPONSE
       res.status(200).json({message:"Resume improved successfully",oldScore:oldScore,newScore:newScore,scoreImprovement:newScore-oldScore,improvedResume,history});
-    } catch (err) {
-      console.log("MAIN ERROR - improve resume:", {message: err.message,stack: err.stack,name: err.name,});
-
+    } catch(err){
+      console.log("MAIN ERROR - improve resume:",{message:err.message,stack:err.stack,name:err.name,});
       res.status(500).json({message:"Error improving resume: " + err.message});
     }
   }
