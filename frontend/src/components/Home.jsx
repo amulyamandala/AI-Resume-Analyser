@@ -102,7 +102,7 @@ function Home() {
           </p>
 
           {/* JOB DESCRIPTION INPUT */}
-          <div className="w-full max-w-2xl mx-auto">
+          <div className="w-full max-w-2xl p-3 mx-auto">
             <textarea
               placeholder="Paste Job Description here (Optional)..."
               value={jobDescription}
