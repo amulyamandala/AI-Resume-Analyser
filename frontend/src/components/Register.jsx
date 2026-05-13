@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { NavLink ,useNavigate} from "react-router";
 import { useState } from "react";
 import axios from "axios";
+import { GoogleLogin }from "@react-oauth/google";
 import {
   pageWrapper,
   centeredFlex,
@@ -13,6 +14,8 @@ import {
   primaryBtn,
   tertiaryBtn,
   smallText,
+  googleButtonContainer,
+ 
 } from "../styles/common.js";
 function Register() {
   const {register,handleSubmit,formState: { errors }}=useForm();
@@ -146,6 +149,25 @@ function Register() {
                 : "Create Account"
             }
           </button>
+          
+          {/*Google sign in*/}
+        <div className={googleButtonContainer}>
+          <GoogleLogin onSuccess={async(credentialResponse)=>{
+            try{
+
+          const res =await axios.post("http://localhost:5000/user-api/google-login",{token:credentialResponse.credential},{withCredentials:true});
+          console.log(res.data);
+          window.location.href ="/";
+        }
+        catch(err){
+          console.log(err);
+        }
+      }}
+      onError={()=>{
+        console.log("Google Login Failed");
+      }}
+    />
+  </div>
         </form>
 
         {/* Footer */}

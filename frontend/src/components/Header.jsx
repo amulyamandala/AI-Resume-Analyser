@@ -12,10 +12,22 @@ import {
 function Header() {
   const navigate=useNavigate()
   const {isAuthenticated,logout}=useAuthStore()
-  const handleLogout=async()=>{
-    await logout()
-    navigate("/")
-  }
+  const handleLogout = async()=>{
+
+  /* CLEAR OLD USER DATA */
+  localStorage.removeItem(
+    "resumeId"
+  );
+
+  localStorage.removeItem(
+    "analysis"
+  );
+
+  await logout();
+
+  navigate("/");
+
+}
   return (
     <header className="w-full h-20 bg-white border-b border-[#f0f0f3] sticky top-0 z-50">
       <div className={`${container} ${flexBetween} h-full px-6 md:px-12`}>
@@ -58,6 +70,16 @@ function Header() {
           {/* PRIVATE HEADER */}
           {isAuthenticated && (
             <>
+             <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  isActive
+                    ? `${activeNavLink} text-[17px] font-bold`
+                    : `${navLink} text-[15px] font-medium`
+                }
+              >
+                Home
+              </NavLink>
               <NavLink
                 to="/dashboard"
                 className={({ isActive }) =>

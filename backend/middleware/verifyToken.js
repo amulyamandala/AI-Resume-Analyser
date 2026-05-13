@@ -1,8 +1,6 @@
 import jwt from 'jsonwebtoken'
 const {verify}=jwt
 export function verifyToken (req,res,next){
-  
-  
     try{   
          const token=req.cookies?.token;
           if(!token){

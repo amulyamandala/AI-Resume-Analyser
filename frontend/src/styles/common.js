@@ -113,12 +113,16 @@ export const activeNavLink ="text-sm font-medium text-black";
 // ========================= PROFILE =========================
 
 export const profileWrapper ="bg-white rounded-2xl border border-[#e5e5e5] p-8";
-export const profileGrid ="grid grid-cols-1 md:grid-cols-2 gap-6";
+export const profileGrid ="grid grid-cols-1 md:grid-cols-2 gap-8";
 export const profileLabel ="text-sm font-medium text-[#737373] mb-2";
 export const profileValue ="text-lg font-semibold text-[#171717] break-words";
 export const historyCard ="bg-[#fafafa] border border-[#e5e5e5] rounded-xl p-5";
 export const historyTitle ="text-lg font-semibold text-[#171717]";
 export const historyText ="text-sm text-[#525252] mt-3";
-export const profileSectionTitle ="text-4xl font-semibold text-[#171717] mb-10";
+export const profileSectionTitle ="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-[#171717] mb-10";
 export const divider ="border-t border-[#e5e5e5] my-10";
 export const emptyState ="text-[#737373] text-sm";
+
+
+// ========================= GOOGLE =========================
+export const googleButtonContainer ="w-full flex items-center justify-center";

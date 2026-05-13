@@ -3,10 +3,12 @@ import { UserModel } from "../model/userModel.js";
 import {hash,compare} from 'bcrypt';
 import { verifyToken } from "../middleware/verifyToken.js";
 import {config} from 'dotenv'
+import { OAuth2Client } from "google-auth-library";
 import jwt from 'jsonwebtoken'
 const {sign,verify}=jwt
 export const userApp=exp.Router()
-//Registration route
+const client=new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+//registration 
 userApp.post("/register",async(req,res)=>{
     try{
         const newUser=req.body
@@ -57,6 +59,43 @@ userApp.post("/login",async(req,res)=>{
     delete userObj.password
     res.status(200).json({message:"Login successful",token,payload:userObj})
 })
+// google login
+userApp.post("/google-login",async(req,res)=>{
+    try{
+      const {token}=req.body;
+      const ticket=await client.verifyIdToken({idToken: token,audience:process.env.GOOGLE_CLIENT_ID});
+      const payload=ticket.getPayload();
+      const {email,name,picture}=payload;
+      let user=await UserModel.findOne({email});
+      if(!user){
+        user=await UserModel.create({name,email,photo:picture,password:"GOOGLE_AUTH"});
+      }
+      const accessToken=sign({id:user._id,email:user.email},process.env.JWT_SECRET,{expiresIn:"2h"});
+      const refreshToken = sign({id:user._id,email:user.email},process.env.JWT_REFRESH,{expiresIn:"7d"});
+      user.refreshToken =refreshToken;
+      await user.save();
+      res.cookie("token",accessToken,{
+          httpOnly:true,
+          sameSite:"lax",
+          secure:false
+        }
+      );
+      res.cookie("refreshToken",refreshToken,{
+          httpOnly:true,
+          sameSite:"lax",
+          secure:false
+        }
+      );
+      let userObj=user.toObject();
+      delete userObj.password;
+      res.status(200).json({message:"Google Login Success",token:accessToken,payload:userObj});
+    }
+    catch(err){
+      console.log(err);
+      res.status(500).json({message:"Google Login Failed"});
+    }
+  }
+);
 //logout 
 userApp.get("/logout",(req,res)=>{
     res.clearCookie("token",{

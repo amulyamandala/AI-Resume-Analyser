@@ -9,13 +9,16 @@ import {
   textInput,
   primaryBtn,
   tertiaryBtn,
+  googleButtonContainer,
+
 } from "../styles/common";
 import {useForm} from 'react-hook-form'
 import { NavLink, useNavigate, useLocation } from "react-router";
 import { useAuthStore } from "../store/authStore.js";
 import { useEffect } from "react";
 import {toast} from 'react-hot-toast'
-
+import { GoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 function Login() {
       const {register,handleSubmit,formState:{errors}}=useForm();
       const navigate=useNavigate()
@@ -103,6 +106,25 @@ function Login() {
           >
             Sign In
           </button>
+       
+       {/*Google Sign in*/}
+        <div className={googleButtonContainer}>
+          <GoogleLogin onSuccess={async(credentialResponse)=>{
+            try{
+
+          const res =await axios.post("http://localhost:5000/user-api/google-login",{token:credentialResponse.credential},{withCredentials:true});
+          console.log(res.data);
+          window.location.href ="/";
+        }
+        catch(err){
+          console.log(err);
+        }
+      }}
+      onError={()=>{
+        console.log("Google Login Failed");
+      }}
+    />
+  </div>
         </form>
 
         {/* Footer */}

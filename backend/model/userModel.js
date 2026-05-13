@@ -13,6 +13,14 @@ const userSchema=new Schema({
         type:String,
         required:[true,"Password required"]
     },
+    photo:{
+        type:String
+    },
+
+    googleAuth:{
+        type:Boolean,
+        default:false
+    },
     refreshToken:{
         type:String
     }
