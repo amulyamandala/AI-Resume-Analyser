@@ -29,17 +29,22 @@ analysisApp.post("/run/:resumeId",verifyToken,async(req,res)=>{
         const arrayBuffer=await response.arrayBuffer();
         const buffer=Buffer.from(arrayBuffer)
         let text="";
-        if(resume.fileType==="application/pdf"){
-          const parsed=await pdfParse(buffer);
-          text=parsed.text.toLowerCase();
-      }
-      else if(resume.fileType==="application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
-        const result=await mammoth.extractRawText({buffer});
-        text=result.value.toLowerCase();
-     }
-      else{
-        return res.status(400).json({message:"Unsupported file type"});
-      }
+        try {
+          if(resume.fileType==="application/pdf"){
+            const parsed=await pdfParse(buffer);
+            text=parsed.text.toLowerCase();
+          }
+          else if(resume.fileType==="application/vnd.openxmlformats-officedocument.wordprocessingml.document" || resume.fileType==="application/msword" || resume.fileName.toLowerCase().endsWith('.docx') || resume.fileName.toLowerCase().endsWith('.doc')){
+            const result=await mammoth.extractRawText({buffer});
+            text=result.value.toLowerCase();
+          }
+          else{
+            return res.status(400).json({message:"Unsupported file type. Supported formats: PDF, DOCX, DOC"});
+          }
+        } catch(extractErr) {
+          console.log("Text extraction error:", extractErr.message);
+          return res.status(400).json({message:"Failed to extract text from file. Please ensure the file is valid."});
+        }
 
         const keywords=["javascript","node","web development","python","data structures","machine learning","react","mongodb","java","c","agentic ai","soft skills","communication"]
         const keywordsMatched=keywords.filter(k=>text.includes(k));
