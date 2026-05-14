@@ -42,12 +42,13 @@ export const smallText = "text-sm text-[#60646c]";
 export const mutedText ="text-sm text-[#8a8a8a]";
 export const captionText = "text-[13px] text-[#60646c]";
 export const codeText = "font-mono text-[13px] leading-6";
-export const navLink ="text-xs sm:text-sm md:text-[15px] font-medium text-[#525252] hover:text-black transition duration-200";
+export const navLink ="text-[11px] sm:text-sm md:text-[15px] font-medium text-[#525252] hover:text-black transition duration-200";
 
 
 // =========================BUTTONS =========================
 
-export const primaryBtn = "h-10 px-5 rounded-md bg-black hover:bg-[#1a1a1a] text-white text-sm font-medium transition duration-200";
+
+export const primaryBtn ="h-10 sm:h-11 px-4 sm:px-5 rounded-md bg-black hover:bg-[#1a1a1a] text-white text-xs sm:text-sm font-medium transition duration-200";
 export const secondaryBtn = "h-10 px-5 rounded-md bg-white border border-[#dcdee0] text-[#171717] text-sm font-medium hover:bg-[#fafafa] transition";
 export const tertiaryBtn = "text-[#0d74ce] text-sm font-medium hover:underline";
 
@@ -104,10 +105,10 @@ export const footer = "bg-black border-t border-[#f0f0f3] px-12 py-16 text-sm te
 export const footerLink ="text-[#60646c] hover:text-black transition";
 // ========================= HEADER / NAV =========================
 
-export const navContainer = "max-w-14xl mx-auto h-20 flex items-center justify-between px-6 md:px-12 border-b border-[#f0f0f3]";
-export const navLogo = "text-2xl font-semibold tracking-[-1px] text-[#171717]";
-export const navLinks ="flex items-center justify-end flex-wrap gap-4 md:gap-8";
-export const activeNavLink ="text-sm sm:text-base md:text-[17px] font-bold text-black";
+export const navContainer ="w-full max-w-7xl mx-auto h-16 sm:h-20 flex items-center justify-between px-4 sm:px-6 md:px-12";
+export const navLogo ="text-3xl sm:text-4xl font-semibold tracking-[-1px] text-[#171717]";
+export const navLinks ="flex items-center gap-2 sm:gap-4 md:gap-8";
+export const activeNavLink ="text-[11px] sm:text-sm md:text-[17px] font-bold text-black";
 
 
 // ========================= PROFILE =========================
