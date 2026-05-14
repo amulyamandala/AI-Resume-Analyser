@@ -17,7 +17,7 @@ config()
  const app=exp()
   //cors configuration this allows the backend and frontend to interact 
  app.use(cors({
-    origin:"http://localhost:5173",
+    origin:["http://localhost:5173","https://ai-resume-analyser-jade.vercel.app"],
     credentials:true
 }))
  app.use(exp.json())
