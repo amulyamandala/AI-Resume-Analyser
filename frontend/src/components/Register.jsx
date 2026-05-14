@@ -27,7 +27,7 @@ function Register() {
     console.log(userObj);
     try{
       setLoading(true);
-      let res=await axios.post("http://localhost:5000/user-api/register",userObj);
+      let res=await axios.post("/user-api/register",userObj);
       if (res.status===201) {
         navigate("/login");
       }
@@ -149,13 +149,13 @@ function Register() {
                 : "Create Account"
             }
           </button>
-          
+
           {/*Google sign in*/}
         <div className={googleButtonContainer}>
           <GoogleLogin onSuccess={async(credentialResponse)=>{
             try{
 
-          const res =await axios.post("http://localhost:5000/user-api/google-login",{token:credentialResponse.credential},{withCredentials:true});
+          const res =await axios.post("/user-api/google-login",{token:credentialResponse.credential},{withCredentials:true});
           console.log(res.data);
           window.location.href ="/";
         }

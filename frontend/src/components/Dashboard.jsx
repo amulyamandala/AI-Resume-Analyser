@@ -44,7 +44,7 @@ function Dashboard() {
     try{
       setLoading(true);
       const resumeId=localStorage.getItem("resumeId");
-      const res=await axios.get(`http://localhost:5000/resume-api/resume/${resumeId}`,{withCredentials:true});
+      const res=await axios.get(`/resume-api/resume/${resumeId}`,{withCredentials:true});
       setResumes([res.data.payload]);
     } 
     catch(err){
@@ -58,7 +58,7 @@ function Dashboard() {
   //analyze resume
   const handleAnalyze=async(resumeId)=>{
     try{
-      const res=await axios.post(`http://localhost:5000/analysis-api/run/${resumeId}`,{withCredentials: true});
+      const res=await axios.post(`/analysis-api/run/${resumeId}`,{withCredentials: true});
       setAnalysis(res.data.analysis);
     } 
     catch(err){
@@ -70,9 +70,9 @@ function Dashboard() {
   const handleDelete=async(resumeId)=>{
    try{
     if(analysis?._id){
-      await axios.delete(`http://localhost:5000/analysis-api/${analysis._id}`,{withCredentials:true});
+      await axios.delete(`/analysis-api/${analysis._id}`,{withCredentials:true});
     }
-    await axios.delete(`http://localhost:5000/resume-api/${resumeId}`,{withCredentials:true});
+    await axios.delete(`/resume-api/${resumeId}`,{withCredentials:true});
     setResumes([]);
     setAnalysis(null);
     localStorage.removeItem("resumeId");
@@ -101,7 +101,7 @@ function Dashboard() {
         setGeneratingPlan(false);
         return;
       }
-      const res=await axios.post(`http://localhost:5000/studyplan-api/generate/${targetId}`,{},{withCredentials:true});
+      const res=await axios.post(`/studyplan-api/generate/${targetId}`,{},{withCredentials:true});
       localStorage.setItem("analysisId", targetId);
       navigate("/study-plan");
     }
@@ -125,7 +125,7 @@ function Dashboard() {
         missingKeywords:analysis.keywordsMissing||analysis.missingKeywords||[],
       };
       console.log("Improvement Payload:", payload);
-      const res = await axios.post("http://localhost:5000/improve-resume-api/generate",payload,{withCredentials:true});
+      const res = await axios.post("/improve-resume-api/generate",payload,{withCredentials:true});
       setImprovedData(res.data);
       // Scroll to the improved section
       setTimeout(()=>{
@@ -405,8 +405,8 @@ useEffect(()=>{
                 className={primaryBtn}
                 onClick={async()=>{
                   try{
-                    const res = await axios.post("http://localhost:5000/pdf-api/generate",{improvedResume: improvedData.improvedResume},{withCredentials:true});
-                    window.open(`http://localhost:5000${res.data.downloadUrl}`,"_blank");
+                    const res = await axios.post("/pdf-api/generate",{improvedResume: improvedData.improvedResume},{withCredentials:true});
+                    window.open(`${res.data.downloadUrl}`,"_blank");
                   } 
                   catch(err){
                     setError("PDF generation failed");

@@ -112,7 +112,7 @@ function Login() {
           <GoogleLogin onSuccess={async(credentialResponse)=>{
             try{
 
-          const res =await axios.post("http://localhost:5000/user-api/google-login",{token:credentialResponse.credential},{withCredentials:true});
+          const res =await axios.post("/user-api/google-login",{token:credentialResponse.credential},{withCredentials:true});
           console.log(res.data);
           window.location.href ="/";
         }

@@ -32,7 +32,7 @@ const navigate=useNavigate();
   // FETCH USER
   const fetchUser=async()=>{
   try{
-    const res=await axios.get("http://localhost:5000/user-api/profile",{withCredentials:true});
+    const res=await axios.get("/user-api/profile",{withCredentials:true});
     setUser(res.data.payload);
    }
     catch(err){
@@ -46,7 +46,7 @@ const navigate=useNavigate();
       const resumeId=localStorage.getItem("resumeId");
       if(!resumeId) 
         return;
-      const res=await axios.get(`http://localhost:5000/analysis-api/history/${resumeId}`,{withCredentials:true});
+      const res=await axios.get(`/analysis-api/history/${resumeId}`,{withCredentials:true});
       setHistory(res.data.history);
     }
     catch(err){
@@ -57,7 +57,7 @@ const navigate=useNavigate();
 //update password
  const handlePasswordUpdate=async()=>{
   try{
-    const res=await axios.put("http://localhost:5000/user-api/password",{email:user.email,password,newpassword});
+    const res=await axios.put("/user-api/password",{email:user.email,password,newpassword});
     setMsg(res.data.message);
     setPassword("");
     setNewpassword("");
@@ -69,7 +69,7 @@ const navigate=useNavigate();
 };
  const fetchUserResumes=async()=>{
   try{
-    const res=await axios.get("http://localhost:5000/resume-api/my-resumes",{withCredentials:true});
+    const res=await axios.get("/resume-api/my-resumes",{withCredentials:true});
     setResumes(res.data.payload);
   }
   catch(err){
@@ -83,7 +83,7 @@ useEffect(()=>{
 },[]);
 const handleDeleteResume=async (resumeId)=>{
   try{
-    await axios.delete(`http://localhost:5000/resume-api/${resumeId}`,{withCredentials:true});
+    await axios.delete(`/resume-api/${resumeId}`,{withCredentials:true});
     setResumes(resumes.filter((resume)=>resume._id!==resumeId));
    }
   catch(err){
@@ -94,7 +94,7 @@ const handleDeleteResume=async (resumeId)=>{
  //GET ANALYSIS OF CLICKED RESUME 
 const handleOpenResume=async(resumeId)=>{
   try{
-    const res=await axios.get(`http://localhost:5000/analysis-api/${resumeId}`,{withCredentials:true});
+    const res=await axios.get(`/analysis-api/${resumeId}`,{withCredentials:true});
     localStorage.setItem("resumeId",resumeId);
     localStorage.setItem("analysis",JSON.stringify(res.data.analysis));
     navigate("/dashboard");

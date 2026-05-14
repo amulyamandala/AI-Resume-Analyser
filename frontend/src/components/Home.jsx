@@ -54,17 +54,17 @@ function Home() {
       else {
         localStorage.removeItem("jobDescription");
       }
-      const res=await axios.post("http://localhost:5000/resume-api/upload",formData,{withCredentials: true,});
+      const res=await axios.post("/resume-api/upload",formData,{withCredentials: true,});
       const resumeId=res.data.resume._id;
       localStorage.setItem("resumeId", resumeId);
       let analysisRes;
       if(jobDescription.trim()){
         // If JD is provided, run Job Match Analysis
-        analysisRes = await axios.post(`http://localhost:5000/job-match-api/run/${resumeId}`,{jobDescription},{withCredentials:true});
+        analysisRes = await axios.post(`/job-match-api/run/${resumeId}`,{jobDescription},{withCredentials:true});
       } 
       else{
         // Fallback to standard ATS Analysis
-        analysisRes=await axios.post(`http://localhost:5000/analysis-api/run/${resumeId}`,{},{withCredentials:true});
+        analysisRes=await axios.post(`/analysis-api/run/${resumeId}`,{},{withCredentials:true});
       }
       localStorage.setItem("analysis",JSON.stringify(analysisRes.data.analysis?{...analysisRes.data.analysis,resumeText:analysisRes.data.resumeText}:analysisRes.data));
       const savedAnalysis=analysisRes.data.analysis||analysisRes.data;

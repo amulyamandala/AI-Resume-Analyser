@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import axios from "axios";
-const BASE_URL = "http://localhost:5000";
 export const useAuthStore = create((set) => ({
   currentUser: null,
   isAuthenticated: false,
@@ -13,13 +12,7 @@ export const useAuthStore = create((set) => ({
         loading: true,
         error: null,
       });
-      const res = await axios.post(
-        `${BASE_URL}/user-api/login`,
-        userCred,
-        {
-          withCredentials: true,
-        }
-      );
+      const res=await axios.post(`/user-api/login`,userCred,{withCredentials: true});
       set({
         currentUser: res.data.payload,
         isAuthenticated: true,
@@ -40,19 +33,13 @@ export const useAuthStore = create((set) => ({
     }
   },
   // REGISTER
-  register: async (userData) => {
+  register:async(userData)=>{
     try {
       set({
         loading: true,
         error: null,
       });
-      const res = await axios.post(
-        `${BASE_URL}/user-api/register`,
-        userData,
-        {
-          withCredentials: true,
-        }
-      );
+      const res=await axios.post(`/user-api/register`,userData,{withCredentials: true});
       set({
         loading: false,
         error: null,
@@ -68,14 +55,9 @@ export const useAuthStore = create((set) => ({
     }
   },
   // LOGOUT
-  logout: async () => {
+  logout:async()=>{
     try {
-      await axios.get(
-        `${BASE_URL}/user-api/logout`,
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.get(`/user-api/logout`,{withCredentials: true});
       set({
         currentUser: null,
         isAuthenticated: false,
@@ -91,16 +73,12 @@ export const useAuthStore = create((set) => ({
     }
   },
   // CHECK AUTH
-  checkAuth: async () => {
+  checkAuth: async()=>{
     try {
       set({
         loading: true,
       });
-      const res = await axios.get(
-        `${BASE_URL}/user-api/check-auth`,
-        {
-          withCredentials: true,
-        }
+      const res=await axios.get(`/user-api/check-auth`,{withCredentials: true,}
       );
       set({
         currentUser: res.data.payload || null,
@@ -112,20 +90,9 @@ export const useAuthStore = create((set) => ({
     } catch (err) {
       try {
         //refresh token
-        await axios.post(
-          `${BASE_URL}/user-api/refresh`,
-          {},
-          {
-            withCredentials: true,
-          }
-        );
+        await axios.post(`/user-api/refresh`,{},{withCredentials: true});
         //retry check-auth
-        const res = await axios.get(
-          `${BASE_URL}/user-api/check-auth`,
-          {
-            withCredentials: true,
-          }
-        );
+        const res=await axios.get(`/user-api/check-auth`,{withCredentials: true});
         set({
           currentUser: res.data.payload || null,
           isAuthenticated: true,
@@ -144,7 +111,7 @@ export const useAuthStore = create((set) => ({
     }
   },
   // CLEAR ERROR
-  clearError: () => {
+  clearError:()=>{
     set({
       error: null,
     });

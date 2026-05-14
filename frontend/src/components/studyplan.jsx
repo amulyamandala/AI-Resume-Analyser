@@ -39,7 +39,7 @@ function StudyPlan() {
         setError("No analysis found. Please run an analysis first.");
         return;
       }
-      const res=await axios.post(`http://localhost:5000/studyplan-api/generate/${analysisId}`,{},{withCredentials:true});
+      const res=await axios.post(`/studyplan-api/generate/${analysisId}`,{},{withCredentials:true});
       setStudyPlan(res.data.payload);
     }
     catch(err){
@@ -52,8 +52,8 @@ function StudyPlan() {
   };
   const handleDownloadRoadmap=async()=>{
     try {
-      const res=await axios.post("http://localhost:5000/pdf-api/generate-roadmap",{studyPlan},{withCredentials:true});
-      window.open(`http://localhost:5000${res.data.downloadUrl}`,"_blank");
+      const res=await axios.post("/pdf-api/generate-roadmap",{studyPlan},{withCredentials:true});
+      window.open(`${res.data.downloadUrl}`,"_blank");
     } 
     catch(err){
       console.log(err);
@@ -81,7 +81,7 @@ function StudyPlan() {
           setError("No analysis found. Please run an analysis first.");
           return;
         }
-        const res=await axios.get(`http://localhost:5000/studyplan-api/${analysisId}`,{withCredentials:true});
+        const res=await axios.get(`/studyplan-api/${analysisId}`,{withCredentials:true});
         setStudyPlan(res.data.payload);
       }
       catch(err){
