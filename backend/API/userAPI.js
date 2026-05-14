@@ -19,8 +19,8 @@ userApp.post("/register",async(req,res)=>{
         const token=sign({id:userDoc._id,email:userDoc.email},process.env.JWT_SECRET,{expiresIn:"2h"});
         res.cookie("token",token,{
             httpOnly:true,
-            sameSite:"lax",
-            secure:false,
+            sameSite:"none",
+            secure:true,
         })
         let userObj=userDoc.toObject()
         delete userObj.password
@@ -47,13 +47,13 @@ userApp.post("/login",async(req,res)=>{
     await user.save()
     res.cookie("token",token,{
         httpOnly:true,
-        sameSite:"lax",
-        secure:false,
+        sameSite:"none",
+        secure:true,
     })
     res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    sameSite: "lax",
-    secure: false,
+    sameSite: "none",
+    secure: true,
 })
     let userObj=user.toObject()
     delete userObj.password
@@ -76,14 +76,14 @@ userApp.post("/google-login",async(req,res)=>{
       await user.save();
       res.cookie("token",accessToken,{
           httpOnly:true,
-          sameSite:"lax",
-          secure:false
+          sameSite:"none",
+          secure:true
         }
       );
       res.cookie("refreshToken",refreshToken,{
           httpOnly:true,
-          sameSite:"lax",
-          secure:false
+          sameSite:"none",
+          secure:true
         }
       );
       let userObj=user.toObject();
@@ -100,13 +100,13 @@ userApp.post("/google-login",async(req,res)=>{
 userApp.get("/logout",(req,res)=>{
     res.clearCookie("token",{
         httpOnly:true,
-        secure:false,
-        sameSite:"lax",
+        secure:true,
+        sameSite:"none",
     })
       res.clearCookie("refreshToken", {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax" })
+        secure: true,
+        sameSite: "none" })
     res.status(200).json({messsage:"Logout Succesful"})
 })
 //check-auth 
@@ -179,7 +179,10 @@ userApp.post("/refresh", async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "2d" }
     )
-    res.cookie("token", newAccessToken, { httpOnly: true, secure: false, sameSite: "lax" })
+    res.cookie("token", newAccessToken, {
+         httpOnly: true,
+         secure: true,
+         sameSite: "none" })
     res.status(200).json({ message: "Token Refreshed", token: newAccessToken })
   } 
   catch(err) {
