@@ -85,8 +85,8 @@ try{
       console.log("JD Length:", jobDescription?.length);
 
       // UNIFIED SCORING (Old Resume)
-      const oldScoreResult=calculateAtsScore(resumeText, jobDescription);
-      const oldScore=oldScoreResult.score;
+      // USE EXISTING ANALYSIS SCORE
+      const oldScore =req.body.oldScore;
       console.log("Old Score:",oldScore,"Matched:",oldScoreResult.matched.length,"JD Keywords:", oldScoreResult.jdKeywords?.length);
 
    // UNIFIED SCORING (Improved Resume)
