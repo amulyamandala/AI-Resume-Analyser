@@ -35,19 +35,19 @@ Unlike standard resume parsers, our system does more than just extract text. It 
 
 ### 1. The Dashboard & ATS Score Analysis
 > *Upload your resume, paste the JD, and instantly see your ATS match score alongside matched/missing skills.*
-![Dashboard Preview](https://placehold.co/1000x500/1e1e2f/ffffff?text=Dashboard+&+ATS+Score+Analysis)
+![Dashboard Preview](./screenshots/dashboard.png)
 
 ### 2. Personalized AI Study Plan
 > *An AI-generated roadmap tailored to help you learn the skills missing from your resume.*
-![Study Plan Preview](https://placehold.co/1000x500/1e1e2f/ffffff?text=Personalized+AI+Study+Plan)
+![Study Plan Preview](./screenshots/studyplan.png)
 
 ### 3. User Authentication & Profile
 > *Secure JWT & Google OAuth authentication keeping your resume history safe.*
-![Auth Preview](https://placehold.co/1000x500/1e1e2f/ffffff?text=Secure+Login+&+User+Profile)
+![Auth Preview](./screenshots/login.png)
 
 ### 4. Resume History & Analytics
 > *Track your previous resume submissions and watch your ATS scores improve over time.*
-![History Preview](https://placehold.co/1000x500/1e1e2f/ffffff?text=Resume+History+Tracking)
+![History Preview](./screenshots/profile.png)
 
 ---
 
@@ -152,5 +152,9 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 ---
 
 <div align="center">
-  <p>Built with ❤️ by <a href="https://github.com/amulyamandala">Amulya Mandala</a></p>
+  <p>Built by <a href="https://github.com/amulyamandala">Sri Amulya Mandala</a></p>
+  <p>Built by <a href="https://github.com/JoyceHanan">Joyce Hanan Marri </a></p>
+  <p>Built by <a href="https://github.com/rithvika-dev">Rithvika</a></p>
+  <p>Built by <a href="https://github.com/sreemaye-2006">Sreemaye</a></p>
+  <p>Built by <a href="https://github.com/KrishnaveniKovoor">Krishnaveni Kovoor</a></p>
 </div>
