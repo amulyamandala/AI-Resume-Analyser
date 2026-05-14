@@ -129,3 +129,15 @@ analysisApp.get("/:resumeId",verifyToken,async(req,res)=>{
     res.status(500).json({message:"Error deleting analysis"});
   }
 })
+// DELETE ANALYSIS BY RESUME ID
+analysisApp.delete("/resume/:resumeId",verifyToken,async(req,res)=>{
+    try{
+      await AnalysisModel.deleteMany({resumeId:req.params.resumeId});
+      res.status(200).json({message:"Analysis deleted"});
+    }
+    catch(err){
+      console.log(err);
+      res.status(500).json({message:"Delete failed"});
+    }
+  }
+);

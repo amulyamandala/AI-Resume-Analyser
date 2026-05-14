@@ -81,16 +81,23 @@ useEffect(()=>{
   Promise.all([fetchUser(),fetchHistory(),fetchUserResumes()])
   .finally(()=>{setLoading(false);});
 },[]);
-const handleDeleteResume=async (resumeId)=>{
+const handleDeleteResume=async(resumeId)=>{
   try{
+    await axios.delete(`/analysis-api/resume/${resumeId}`,{withCredentials:true});
     await axios.delete(`/resume-api/${resumeId}`,{withCredentials:true});
-    setResumes(resumes.filter((resume)=>resume._id!==resumeId));
-   }
+    setResumes(
+      resumes.filter((resume)=>resume._id!==resumeId));
+    const currentResumeId=localStorage.getItem("resumeId");
+    if(currentResumeId===resumeId){
+      localStorage.removeItem("resumeId");
+      localStorage.removeItem("analysis");}
+  }
   catch(err){
     console.log(err);
-    setError("Failed to delete resume");
+    setError(
+      "Failed to delete resume"
+    );
   }
-};
  //GET ANALYSIS OF CLICKED RESUME 
 const handleOpenResume=async(resumeId)=>{
   try{
@@ -218,5 +225,6 @@ const handleOpenResume=async(resumeId)=>{
       </section>
     </div>
   );
+}
 }
 export default UserProfile;
