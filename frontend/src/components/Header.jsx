@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink, useNavigate } from 'react-router'
 import { useAuthStore } from "../store/authStore.js"
+import toast from "react-hot-toast";
 import {
   container,
   flexBetween,
@@ -24,6 +25,7 @@ function Header() {
   );
 
   await logout();
+  toast.error("Successfully logged out");
 
   navigate("/");
 
