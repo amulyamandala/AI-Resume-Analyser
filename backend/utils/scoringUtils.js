@@ -22,7 +22,12 @@ export const calculateAtsScore=(text,jdText)=>{
   // 2. Identify keywords in JD
   const jdKeywords=techKeywords.filter(skill=> cleanJD.includes(skill.toLowerCase()) || jdTextLower.includes(skill.toLowerCase()));
 
-  if (jdKeywords.length===0) return {score:0,matched:[],missing:[]};
+  if(jdKeywords.length===0){
+  const matched=techKeywords.filter(skill=>cleanResume.includes(skill.toLowerCase()));
+  const missing=techKeywords.filter(skill=>!matched.includes(skill));
+  const score=Math.round((matched.length /techKeywords.length) * 100);
+  return {score,matched,missing,jdKeywords:techKeywords};
+}
 
   // 3. Clean Resume text
   const resumeTokens=tokenizer.tokenize(textLower);
