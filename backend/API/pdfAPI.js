@@ -45,7 +45,7 @@ pdfApp.post("/generate",verifyToken,async(req,res)=>{
       doc.end();
       // WAIT FOR SAVE
       stream.on("finish",()=>{
-        const downloadUrl = `/uploads/pdfs/${fileName}`;
+        const downloadUrl = `https://ai-resume-analyser-voja.onrender.com/uploads/pdfs/${fileName}`;
         res.status(200).json({message:"PDF generated successfully",downloadUrl,});
       });
     } catch(err){
@@ -93,7 +93,8 @@ pdfApp.post("/generate-roadmap",verifyToken,async(req,res)=>{
     });
     doc.end();
     stream.on("finish",()=>{
-      res.status(200).json({message: "Roadmap PDF generated successfully",downloadUrl: `/uploads/pdfs/${fileName}`,});
+      const downloadUrl = `https://ai-resume-analyser-voja.onrender.com/uploads/pdfs/${fileName}`;
+      res.status(200).json({message: "Roadmap PDF generated successfully",downloadUrl,});
     });
   } catch(err){
     console.log(err);
