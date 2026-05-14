@@ -123,6 +123,7 @@ function Dashboard() {
         resumeText:analysis.resumeText,
         jobDescription:localStorage.getItem("jobDescription")||"Software Engineer Role",
         missingKeywords:analysis.keywordsMissing||analysis.missingKeywords||[],
+        oldScore: analysis.matchScore || analysis.atsScore || 0,
       };
       console.log("Improvement Payload:", payload);
       const res = await axios.post("/improve-resume-api/generate",payload,{withCredentials:true});

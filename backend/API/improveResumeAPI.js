@@ -9,7 +9,7 @@ export const improveResumeApp=exp.Router();
 // IMPROVE RESUME API
 improveResumeApp.post("/generate",verifyToken,async(req,res)=>{
     try{
-      const {resumeText,jobDescription,missingKeywords}=req.body;
+      const {resumeText,jobDescription,missingKeywords,oldScore:clientOldScore}=req.body;
 // VALIDATION
 if(!resumeText){
         return res.status(400).json({message:"resumeText is required"});
@@ -86,7 +86,7 @@ try{
 
       // UNIFIED SCORING (Old Resume)
       const oldScoreResult=calculateAtsScore(resumeText, jobDescription);
-      const oldScore=oldScoreResult.score;
+      const oldScore = clientOldScore !== undefined ? clientOldScore : oldScoreResult.score;
       console.log("Old Score:",oldScore,"Matched:",oldScoreResult.matched.length,"JD Keywords:", oldScoreResult.jdKeywords?.length);
 
    // UNIFIED SCORING (Improved Resume)
