@@ -42,7 +42,7 @@ export const smallText = "text-sm text-[#60646c]";
 export const mutedText ="text-sm text-[#8a8a8a]";
 export const captionText = "text-[13px] text-[#60646c]";
 export const codeText = "font-mono text-[13px] leading-6";
-export const navLink = "text-sm font-medium text-[#171717] hover:text-black transition";
+export const navLink ="text-xs sm:text-sm md:text-[15px] font-medium text-[#525252] hover:text-black transition duration-200";
 
 
 // =========================BUTTONS =========================
@@ -75,7 +75,7 @@ export const badge = "inline-flex items-center px-3 py-1 rounded-full bg-[#f0f0f
 
 // ========================= NAVBAR=========================
 
-export const navbar ="h-16 w-full bg-white border-b border-[#f0f0f3] px-6 md:px-12 flex items-center justify-between sticky top-0 z-50";
+export const navbar ="h-16 sm:h-20 w-full bg-white border-b border-[#f0f0f3] px-4 sm:px-6 md:px-12 flex items-center justify-between sticky top-0 z-50";
 
 
 // =========================HERO SECTION=========================
@@ -106,8 +106,8 @@ export const footerLink ="text-[#60646c] hover:text-black transition";
 
 export const navContainer = "max-w-14xl mx-auto h-20 flex items-center justify-between px-6 md:px-12 border-b border-[#f0f0f3]";
 export const navLogo = "text-2xl font-semibold tracking-[-1px] text-[#171717]";
-export const navLinks ="flex items-center gap-5";
-export const activeNavLink ="text-sm font-medium text-black";
+export const navLinks ="flex items-center justify-end flex-wrap gap-4 md:gap-8";
+export const activeNavLink ="text-sm sm:text-base md:text-[17px] font-bold text-black";
 
 
 // ========================= PROFILE =========================
