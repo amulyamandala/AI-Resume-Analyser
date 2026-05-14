@@ -151,6 +151,13 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 
 ---
 
-<div>
-  <p>Built by <a href="https://github.com/amulyamandala">Sri Amulya Mandala</a></p><p><a href="https://github.com/JoyceHanan">Joyce Hanan Marri </a></p><p><a href="https://github.com/rithvika-dev">Rithvika</a></p><p><a href="https://github.com/sreemaye-2006">Sreemaye</a></p><p><a href="https://github.com/KrishnaveniKovoor">Krishnaveni Kovoor</a></p>
+<div align="center">
+  <p>
+    Built by 
+    <a href="https://github.com/amulyamandala">Sri Amulya Mandala</a> •
+    <a href="https://github.com/JoyceHanan">Joyce Hanan Marri</a> •
+    <a href="https://github.com/rithvika-dev">Rithvika</a> •
+    <a href="https://github.com/sreemaye-2006">Sreemaye</a> •
+    <a href="https://github.com/KrishnaveniKovoor">Krishnaveni Kovoor</a>
+  </p>
 </div>
