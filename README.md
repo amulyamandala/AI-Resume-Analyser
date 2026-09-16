@@ -31,7 +31,7 @@ Unlike standard resume parsers, our system does more than just extract text. It 
 
 ## 📸 Application Screenshots
 
-*(Replace the placeholder image links below with your actual Vercel/live deployment screenshots!)*
+
 
 ### 1. The Dashboard & ATS Score Analysis
 > *Upload your resume, paste the JD, and instantly see your ATS match score alongside matched/missing skills.*
